@@ -5,6 +5,7 @@ import { ModeSelectorScene } from './scenes/ModeSelectorScene'
 import { RPGScene } from './scenes/RPGScene'
 import { ActionScene } from './scenes/ActionScene'
 import { SimScene } from './scenes/SimScene'
+import { PeriliminalScene } from './scenes/PeriliminalScene'
 
 export function createGameConfig(parent: HTMLElement): Types.Core.GameConfig {
   return {
@@ -20,6 +21,7 @@ export function createGameConfig(parent: HTMLElement): Types.Core.GameConfig {
       RPGScene,
       ActionScene,
       SimScene,
+      PeriliminalScene,
     ],
     scale: {
       mode: Phaser.Scale.RESIZE,

@@ -1,0 +1,148 @@
+import type { PhysicalMod } from '@/types/character'
+
+export const PHYSICAL_MODS: PhysicalMod[] = [
+  {
+    id: 'bioluminescent',
+    name: 'Bioluminescent',
+    description: 'Your body emits a soft, living light that pulses with your heartbeat.',
+    visualEffect: 'Gentle rhythmic glow emanating from beneath skin',
+    statModifier: { resonance: 1 },
+  },
+  {
+    id: 'crystalline',
+    name: 'Crystalline',
+    description: 'Crystal growths protrude from key points, refracting your surroundings.',
+    visualEffect: 'Crystal spires and prisms that split light into rainbows',
+    statModifier: { frequency: 1 },
+  },
+  {
+    id: 'ethereal',
+    name: 'Ethereal',
+    description: 'You are partially transparent — reality shows through you.',
+    visualEffect: 'Semi-transparent form with visible internal energy flows',
+    statModifier: { agility: 1 },
+  },
+  {
+    id: 'plated',
+    name: 'Plated',
+    description: 'Armor plating has grown organically from your body over time.',
+    visualEffect: 'Overlapping natural armor plates, faction-colored with age marks',
+    statModifier: { power: 1 },
+  },
+  {
+    id: 'skeletal',
+    name: 'Skeletal',
+    description: 'Your bone structure is visible through translucent outer layers.',
+    visualEffect: 'Visible skeleton with glowing marrow channels',
+    statModifier: { power: 1, agility: -1 },
+  },
+  {
+    id: 'fluid',
+    name: 'Fluid',
+    description: 'Your extremities flow and reshape like liquid.',
+    visualEffect: 'Rippling liquid edges constantly reshaping',
+    statModifier: { agility: 2, power: -1 },
+  },
+  {
+    id: 'magnetic',
+    name: 'Magnetic',
+    description: 'A magnetic field surrounds you, attracting or repelling metal.',
+    visualEffect: 'Visible magnetic field lines with attracted metal fragments orbiting',
+    statModifier: { frequency: 1, resonance: 1 },
+  },
+  {
+    id: 'spectral',
+    name: 'Spectral',
+    description: 'You leave ghost-like trails of yourself as you move.',
+    visualEffect: 'Fading afterimages following your movement',
+    statModifier: { agility: 1, resonance: 1 },
+  },
+  {
+    id: 'volcanic',
+    name: 'Volcanic',
+    description: 'Lava veins pulse across your surface, occasionally venting steam.',
+    visualEffect: 'Glowing magma cracks with steam vents at joints',
+    statModifier: { power: 2, agility: -1 },
+  },
+  {
+    id: 'aquatic',
+    name: 'Aquatic',
+    description: 'Water-adapted features — gills, fins, water-repellent surface.',
+    visualEffect: 'Wet-looking scales, gill slits, flowing hair in still air',
+    statModifier: { agility: 1, frequency: 1 },
+  },
+  {
+    id: 'void_touched',
+    name: 'Void-Touched',
+    description: 'The void has left its mark — a permanent aura of darkness.',
+    visualEffect: 'Darkness aura that dims surroundings slightly',
+    statModifier: { resonance: 2, power: -1 },
+  },
+  {
+    id: 'solar_forged',
+    name: 'Solar-Forged',
+    description: 'Sun energy has been fused into your cellular structure.',
+    visualEffect: 'Constant warm radiance with solar flare micro-eruptions',
+    statModifier: { power: 1, resonance: 1 },
+  },
+  {
+    id: 'fungal',
+    name: 'Fungal',
+    description: 'Fungal colonies have formed a symbiotic bond with your body.',
+    visualEffect: 'Mushroom caps and spore networks growing across shoulders and head',
+    statModifier: { frequency: 2 },
+  },
+  {
+    id: 'archaic',
+    name: 'Archaic',
+    description: 'Ancient symbols have been carved into your form by time itself.',
+    visualEffect: 'Glowing ancient rune channels carved into skin/armor',
+    statModifier: { resonance: 1, frequency: 1 },
+  },
+  {
+    id: 'synthetic',
+    name: 'Synthetic',
+    description: 'Mechanical augmentations have replaced parts of your organic form.',
+    visualEffect: 'Exposed mechanical joints, LED readouts, chrome plating',
+    statModifier: { power: 1, frequency: 1 },
+  },
+  {
+    id: 'dreamwoven',
+    name: 'Dreamwoven',
+    description: 'Dream-fabric has been woven into your physical form.',
+    visualEffect: 'Iridescent shifting patterns that never repeat, cloth-like light',
+    statModifier: { agility: 1, resonance: 2 },
+  },
+  {
+    id: 'runic',
+    name: 'Runic',
+    description: 'Runic inscriptions float just above your surface.',
+    visualEffect: 'Orbiting glowing runes in personal script',
+    statModifier: { frequency: 1, resonance: 1 },
+  },
+  {
+    id: 'feral',
+    name: 'Feral',
+    description: 'Animal features have emerged — claws, heightened senses, fur or scales.',
+    visualEffect: 'Mix of animal and humanoid features, faction-colored',
+    statModifier: { agility: 2, frequency: -1 },
+  },
+  {
+    id: 'celestial',
+    name: 'Celestial',
+    description: 'Star patterns mark your form, shifting with the cosmic positions.',
+    visualEffect: 'Constellation patterns across skin, miniature stars in hair',
+    statModifier: { resonance: 2, agility: 1 },
+  },
+  {
+    id: 'abyssal',
+    name: 'Abyssal',
+    description: 'Deep-sea adaptations with bio-phosphorescent patterns.',
+    visualEffect: 'Deep blue-black with glowing phosphorescent bio-patterns',
+    statModifier: { power: 1, agility: 1 },
+  },
+]
+
+export function getModById(id: string): PhysicalMod | undefined {
+  return PHYSICAL_MODS.find((m) => m.id === id)
+}
