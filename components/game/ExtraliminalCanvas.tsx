@@ -12,7 +12,7 @@ interface PlayerData {
   currencies: Record<string, number>
 }
 
-export default function PeriliminalCanvas({ playerData }: { playerData: PlayerData }) {
+export default function ExtraliminalCanvas({ playerData }: { playerData: PlayerData }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
@@ -23,11 +23,11 @@ export default function PeriliminalCanvas({ playerData }: { playerData: PlayerDa
 
     Promise.all([
       import('phaser'),
-      import('@/lib/game/scenes/PeriliminalScene'),
-    ]).then(([Phaser, { PeriliminalScene }]) => {
+      import('@/lib/game/scenes/ExtraliminalScene'),
+    ]).then(([Phaser, { ExtraliminalScene }]) => {
       if (!containerRef.current) return
 
-      const scene = new PeriliminalScene()
+      const scene = new ExtraliminalScene()
 
       game = new Phaser.Game({
         type: Phaser.AUTO,
@@ -47,7 +47,7 @@ export default function PeriliminalCanvas({ playerData }: { playerData: PlayerDa
       })
 
       // Pass player data via the scene's init
-      game.scene.start('PeriliminalScene', playerData)
+      game.scene.start('ExtraliminalScene', playerData)
 
       // Poll registry for navigation signals
       const navInterval = setInterval(() => {
@@ -75,7 +75,7 @@ export default function PeriliminalCanvas({ playerData }: { playerData: PlayerDa
           race: playerData.race,
           frame: playerData.frame,
           prestige: String(playerData.prestige),
-          currentSpace: 'periliminal game',
+          currentSpace: 'extraliminal game',
         }}
       />
     </>

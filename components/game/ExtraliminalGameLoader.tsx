@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const PeriliminalCanvas = dynamic(() => import('./PeriliminalCanvas'), {
+const ExtraliminalCanvas = dynamic(() => import('./ExtraliminalCanvas'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-screen flex items-center justify-center bg-[#0f0f1a]">
@@ -24,6 +24,6 @@ interface PlayerData {
   currencies: Record<string, number>
 }
 
-export default function PeriliminalGameLoader({ playerData }: { playerData: PlayerData }) {
-  return <PeriliminalCanvas playerData={playerData} />
+export default function ExtraliminalGameLoader({ playerData }: { playerData: PlayerData }) {
+  return <ExtraliminalCanvas playerData={playerData} />
 }

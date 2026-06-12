@@ -26,7 +26,7 @@ const FACTION_COLORS: Record<FactionId, number> = {
 
 const PLAYER_SPEED = 100
 
-export class PeriliminalScene extends Phaser.Scene {
+export class ExtraliminalScene extends Phaser.Scene {
   private map: TileData[][] = []
   private terrainLayer!: Phaser.GameObjects.Graphics
   private entityLayer!: Phaser.GameObjects.Graphics
@@ -44,14 +44,14 @@ export class PeriliminalScene extends Phaser.Scene {
   private encounterTimer = 0
 
   constructor() {
-    super({ key: 'PeriliminalScene' })
+    super({ key: 'ExtraliminalScene' })
   }
 
   init(data: Partial<PlayerData>) {
     this.playerData = {
       faction: data.faction ?? 'veiled_current',
-      race: data.race ?? 'vraith',
-      frame: data.frame ?? 'scout',
+      race: data.race ?? 'ashen_choir',
+      frame: data.frame ?? 'strider',
       prestige: data.prestige ?? 1,
       currencies: data.currencies ?? {
         coin: 0, chip: 0, fragments: 0, tokens: 0, charges: 0, renown: 0,

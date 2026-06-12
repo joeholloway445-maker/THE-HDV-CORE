@@ -60,7 +60,7 @@ export default function CharacterCreationPage() {
         return
       }
 
-      router.push('/game/periliminal')
+      router.push('/game/extraliminal')
     } catch (e) {
       setError('Something went wrong. Try again.')
       setSaving(false)
