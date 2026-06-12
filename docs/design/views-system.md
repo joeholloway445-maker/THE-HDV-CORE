@@ -93,15 +93,19 @@ Views never change Mod-driven combat math — two players fighting the same
 entity get the same combat outcome regardless of which View they're seeing it
 through. Views only change *how it looks/sounds* to each observer.
 
-## Open Question: Apex Matrix (4096)
+## Apex Matrix (4096) — Resolved
 
-Still unresolved from earlier in this session: is the in-game "Apex Matrix
-(4096)" referenced in the Omni Dex a **gameplay build-combination system**
-(e.g., Race x Frame x Mod combination space, 20 x 20 x ~10 ≈ 4096-ish), or is
-it unrelated to the flagged "APEX 64x64 / 4096 matrix" marketing-automation
-project found in Drive (which described a social-bot network and will **not**
-be built as part of this project regardless)? Needs confirmation before any
-"Apex Matrix" feature work begins.
+The in-game "Apex Matrix (4096)" is **unrelated** to the flagged
+"APEX 64x64 / 4096" marketing-automation project found in Drive (that
+social-bot network will **not** be built, regardless of context). The
+in-game Apex Matrix is a **gameplay/narrative system**: a grid of NPC AI
+companion slots that can be filled by player UGC creations, which then
+appear in-game and in-fiction as NPCs with their own storylines. See
+[`apex-matrix.md`](./apex-matrix.md) for the full design.
+
+The Views fidelity scale (holographic <-> distorted) and the Race/Frame/Mod
+tier system apply to Apex Matrix NPCs the same as any other entity — visuals,
+lights/sounds, and physics/combat math all flow through per power-tier delta.
 
 ## Next Steps (not started)
 
@@ -110,4 +114,4 @@ be built as part of this project regardless)? Needs confirmation before any
 - Define a `view_id` (A–S) + `tier_delta` -> fidelity-level lookup
 - Wire view resolution into the renderer based on observer/observed
   relationship + power comparison
-- Resolve Apex Matrix question above
+- See [`apex-matrix.md`](./apex-matrix.md) for Apex Matrix slot/promotion design
