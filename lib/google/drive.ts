@@ -5,6 +5,8 @@ export interface DriveFile {
   name: string
   mimeType: string
   createdTime: string
+  modifiedTime: string
+  viewedByMeTime?: string
   size?: string
 }
 
@@ -13,6 +15,8 @@ export interface ClutterGroup {
   mimeType: string
   files: DriveFile[]
 }
+
+const FOLDER_MIME = 'application/vnd.google-apps.folder'
 
 async function driveFetch(path: string, token: string, init?: RequestInit) {
   const res = await fetch(`${DRIVE_API}${path}`, {
@@ -40,7 +44,7 @@ export async function listAllFiles(
   do {
     const params = new URLSearchParams({
       pageSize: '1000',
-      fields: 'nextPageToken, files(id, name, mimeType, createdTime, size)',
+      fields: 'nextPageToken, files(id, name, mimeType, createdTime, modifiedTime, viewedByMeTime, size)',
       q: "trashed = false and 'me' in owners",
     })
     if (pageToken) params.set('pageToken', pageToken)
@@ -87,4 +91,32 @@ export function findClutterGroups(files: DriveFile[], minCount = 3): ClutterGrou
 
   result.sort((a, b) => b.files.length - a.files.length)
   return result
+}
+
+/** Non-folder files at or above the given size, largest first. */
+export function findLargeFiles(files: DriveFile[], minSizeBytes: number): DriveFile[] {
+  return files
+    .filter((f) => f.mimeType !== FOLDER_MIME && Number(f.size ?? 0) >= minSizeBytes)
+    .sort((a, b) => Number(b.size ?? 0) - Number(a.size ?? 0))
+}
+
+/** Files not modified or opened in over `staleDays`, oldest activity first. */
+export function findStaleFiles(files: DriveFile[], staleDays: number): DriveFile[] {
+  const cutoff = Date.now() - staleDays * 24 * 60 * 60 * 1000
+  return files
+    .filter((f) => {
+      const lastActive = Math.max(
+        new Date(f.modifiedTime).getTime(),
+        f.viewedByMeTime ? new Date(f.viewedByMeTime).getTime() : 0,
+      )
+      return lastActive < cutoff
+    })
+    .sort((a, b) => new Date(a.modifiedTime).getTime() - new Date(b.modifiedTime).getTime())
+}
+
+export function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return `${(bytes / 1024 ** i).toFixed(1)} ${units[i]}`
 }
