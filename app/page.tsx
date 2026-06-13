@@ -36,6 +36,15 @@ export default function HomePage() {
           ENTER THE CORE
         </Link>
 
+        <div className="mt-4">
+          <Link
+            href="/cleaner"
+            className="inline-block px-6 py-2 text-purple-400 hover:text-purple-300 font-mono text-xs tracking-widest border border-purple-900 rounded-lg transition-colors"
+          >
+            HOPE CLEANER →
+          </Link>
+        </div>
+
         <div className="mt-14 grid grid-cols-3 gap-4 text-left">
           {[
             { title: 'CHRONICLES', sub: 'RPG', borderColor: 'border-green-700', textColor: 'text-green-400', desc: 'Story-driven exploration in the HOPE authority layer.' },
