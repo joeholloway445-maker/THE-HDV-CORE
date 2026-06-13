@@ -17,6 +17,7 @@ export interface ClutterGroup {
 }
 
 const FOLDER_MIME = 'application/vnd.google-apps.folder'
+const SCRIPT_MIME = 'application/vnd.google-apps.script'
 
 async function driveFetch(path: string, token: string, init?: RequestInit) {
   const res = await fetch(`${DRIVE_API}${path}`, {
@@ -66,6 +67,14 @@ export async function trashFile(token: string, fileId: string) {
   })
 }
 
+export async function renameFile(token: string, fileId: string, name: string) {
+  await driveFetch(`/files/${fileId}`, token, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  })
+}
+
 /**
  * Groups files/folders that share an exact name and type. Repeated names
  * (e.g. a folder recreated every few hours by a stale Apps Script trigger)
@@ -112,6 +121,17 @@ export function findStaleFiles(files: DriveFile[], staleDays: number): DriveFile
       return lastActive < cutoff
     })
     .sort((a, b) => new Date(a.modifiedTime).getTime() - new Date(b.modifiedTime).getTime())
+}
+
+/**
+ * Apps Script projects owned by the user. Any of these can hold a
+ * time-driven trigger that keeps regenerating files/folders in the
+ * background — surfaced here as candidates for a V2 trigger audit.
+ */
+export function findAutomationSources(files: DriveFile[]): DriveFile[] {
+  return files
+    .filter((f) => f.mimeType === SCRIPT_MIME)
+    .sort((a, b) => new Date(b.modifiedTime).getTime() - new Date(a.modifiedTime).getTime())
 }
 
 export function formatBytes(bytes: number): string {

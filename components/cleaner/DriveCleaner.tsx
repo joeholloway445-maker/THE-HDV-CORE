@@ -3,11 +3,13 @@
 import { useCallback, useMemo, useState } from 'react'
 import Script from 'next/script'
 import {
+  findAutomationSources,
   findClutterGroups,
   findLargeFiles,
   findStaleFiles,
   formatBytes,
   listAllFiles,
+  renameFile,
   trashFile,
   type ClutterGroup,
   type DriveFile,
@@ -47,6 +49,19 @@ export default function DriveCleaner() {
   const [busyFile, setBusyFile] = useState<string | null>(null)
   const [trashedIds, setTrashedIds] = useState<Set<string>>(new Set())
 
+  // Search
+  const [searchTerm, setSearchTerm] = useState('')
+
+  // Find & replace (bulk rename)
+  const [findText, setFindText] = useState('')
+  const [replaceText, setReplaceText] = useState('')
+  const [renaming, setRenaming] = useState(false)
+  const [renameDone, setRenameDone] = useState<Set<string>>(new Set())
+
+  // AI triage
+  const [explaining, setExplaining] = useState<string | null>(null)
+  const [explanations, setExplanations] = useState<Record<string, string>>({})
+
   // Settings
   const [settingsOpen, setSettingsOpen] = useState(true)
   const [minDuplicates, setMinDuplicates] = useState(3)
@@ -57,6 +72,7 @@ export default function DriveCleaner() {
     duplicates: true,
     large: true,
     stale: true,
+    automation: true,
   })
 
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
@@ -83,6 +99,9 @@ export default function DriveCleaner() {
     setGroups(null)
     setScanned(0)
     setTrashedIds(new Set())
+    setRenameDone(new Set())
+    setExplanations({})
+    setSearchTerm('')
     try {
       const fetched = await listAllFiles(token, setScanned)
       setFiles(fetched)
@@ -132,6 +151,32 @@ export default function DriveCleaner() {
     }
   }, [token, dryRun])
 
+  const explainGroup = useCallback(async (group: ClutterGroup) => {
+    const groupKey = `${group.name}::${group.mimeType}`
+    setExplaining(groupKey)
+    try {
+      const oldest = group.files[0]
+      const newest = group.files[group.files.length - 1]
+      const res = await fetch('/api/cleaner/explain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: group.name,
+          mimeType: group.mimeType,
+          count: group.files.length,
+          firstCreated: formatDate(oldest.createdTime),
+          mostRecentCreated: formatDate(newest.createdTime),
+        }),
+      })
+      const data = await res.json()
+      setExplanations((prev) => ({ ...prev, [groupKey]: data.explanation }))
+    } catch {
+      setExplanations((prev) => ({ ...prev, [groupKey]: 'AI triage failed — try again shortly.' }))
+    } finally {
+      setExplaining(null)
+    }
+  }, [])
+
   const largeFiles = useMemo(() => {
     if (!files || !enabledModules.large) return []
     return findLargeFiles(files, largeFileMb * 1024 * 1024).filter((f) => !trashedIds.has(f.id))
@@ -142,7 +187,66 @@ export default function DriveCleaner() {
     return findStaleFiles(files, staleDays).filter((f) => !trashedIds.has(f.id))
   }, [files, enabledModules.stale, staleDays, trashedIds])
 
-  const visibleGroups = useMemo(() => groups ?? [], [groups])
+  const automationSources = useMemo(() => {
+    if (!files || !enabledModules.automation) return []
+    return findAutomationSources(files)
+  }, [files, enabledModules.automation])
+
+  const matchesSearch = useCallback(
+    (name: string) => !searchTerm || name.toLowerCase().includes(searchTerm.toLowerCase()),
+    [searchTerm],
+  )
+
+  const visibleGroups = useMemo(
+    () => (groups ?? []).filter((g) => matchesSearch(g.name)),
+    [groups, matchesSearch],
+  )
+  const visibleLargeFiles = useMemo(
+    () => largeFiles.filter((f) => matchesSearch(f.name)),
+    [largeFiles, matchesSearch],
+  )
+  const visibleStaleFiles = useMemo(
+    () => staleFiles.filter((f) => matchesSearch(f.name)),
+    [staleFiles, matchesSearch],
+  )
+  const visibleAutomationSources = useMemo(
+    () => automationSources.filter((f) => matchesSearch(f.name)),
+    [automationSources, matchesSearch],
+  )
+
+  const renameMatches = useMemo(() => {
+    if (!files || !findText) return []
+    return files
+      .filter((f) => !trashedIds.has(f.id) && !renameDone.has(f.id) && f.name.includes(findText))
+      .map((f) => ({ file: f, newName: f.name.split(findText).join(replaceText) }))
+  }, [files, findText, replaceText, trashedIds, renameDone])
+
+  const applyRename = useCallback(async () => {
+    if (!token || renameMatches.length === 0) return
+    setRenaming(true)
+    setError(null)
+    try {
+      for (const { file, newName } of renameMatches) {
+        if (!dryRun) {
+          await renameFile(token, file.id, newName)
+        }
+      }
+      const renamedIds = new Set(renameMatches.map((m) => m.file.id))
+      setRenameDone((prev) => new Set([...prev, ...renamedIds]))
+      if (!dryRun) {
+        setFiles((prev) =>
+          prev?.map((f) => {
+            const match = renameMatches.find((m) => m.file.id === f.id)
+            return match ? { ...f, name: match.newName } : f
+          }) ?? null,
+        )
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Rename failed.')
+    } finally {
+      setRenaming(false)
+    }
+  }, [token, renameMatches, dryRun])
 
   if (!clientId) {
     return (
@@ -270,11 +374,25 @@ export default function DriveCleaner() {
                   />
                 </div>
               </div>
+
+              <div className="flex items-center justify-between gap-4 text-slate-300">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={enabledModules.automation}
+                    onChange={(e) =>
+                      setEnabledModules((m) => ({ ...m, automation: e.target.checked }))
+                    }
+                    className="accent-purple-500 w-4 h-4"
+                  />
+                  <span>Automation source finder (Apps Script projects)</span>
+                </label>
+              </div>
             </div>
 
             <div className="border-t border-purple-900 pt-3 text-slate-600 text-xs leading-relaxed">
               <p className="text-slate-500 font-bold mb-1">COMING SOON</p>
-              <p>Apps Script trigger audit — detect &amp; disable runaway automations (V2)</p>
+              <p>Full Apps Script trigger audit — detect &amp; disable runaway triggers (V2)</p>
               <p>AI chat history consolidation across apps (V3)</p>
               <p>Background activity tracker, desktop + mobile (V4)</p>
             </div>
@@ -315,6 +433,61 @@ export default function DriveCleaner() {
             {dryRun && <span className="text-amber-400"> Dry run is ON — nothing will be trashed.</span>}
           </div>
 
+          {/* Search */}
+          <div>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search results by name…"
+              className="w-full bg-[#0f0f1a] border border-purple-900 rounded-lg px-4 py-3 font-mono text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-purple-600"
+            />
+          </div>
+
+          {/* Find & replace (bulk rename) */}
+          <div className="rounded-lg border border-purple-800 bg-[#1a1a2e]/50 p-4 font-mono text-sm space-y-3">
+            <div className="text-xs text-purple-400 tracking-widest">FIND &amp; REPLACE — BULK RENAME</div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={findText}
+                onChange={(e) => setFindText(e.target.value)}
+                placeholder="Find in file name…"
+                className="flex-1 bg-[#0f0f1a] border border-purple-900 rounded px-3 py-2 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-purple-600"
+              />
+              <input
+                type="text"
+                value={replaceText}
+                onChange={(e) => setReplaceText(e.target.value)}
+                placeholder="Replace with…"
+                className="flex-1 bg-[#0f0f1a] border border-purple-900 rounded px-3 py-2 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-purple-600"
+              />
+              <button
+                onClick={applyRename}
+                disabled={renaming || renameMatches.length === 0}
+                className="shrink-0 px-4 py-2 bg-purple-700 hover:bg-purple-600 disabled:opacity-50 text-white text-xs tracking-widest rounded-lg border border-purple-500 transition-colors"
+              >
+                {renaming
+                  ? 'RENAMING…'
+                  : `${dryRun ? 'PREVIEW' : 'APPLY'} (${renameMatches.length})`}
+              </button>
+            </div>
+            {findText && (
+              <div className="text-slate-500 text-xs space-y-1">
+                {renameMatches.length === 0 ? (
+                  <p>No files match &quot;{findText}&quot;.</p>
+                ) : (
+                  renameMatches.slice(0, 8).map(({ file, newName }) => (
+                    <p key={file.id} className="truncate">
+                      {file.name} <span className="text-purple-400">→</span> {newName}
+                    </p>
+                  ))
+                )}
+                {renameMatches.length > 8 && <p>…and {renameMatches.length - 8} more.</p>}
+              </div>
+            )}
+          </div>
+
           {/* Duplicates */}
           {enabledModules.duplicates && (
             <div className="space-y-4">
@@ -347,16 +520,30 @@ export default function DriveCleaner() {
                             Most recent: {formatDate(newest.createdTime)}
                           </div>
                         </div>
-                        <button
-                          onClick={() => cleanGroup(group)}
-                          disabled={busyGroup === groupKey}
-                          className="shrink-0 px-4 py-2 bg-red-900/60 hover:bg-red-800/80 disabled:opacity-50 text-red-200 text-xs tracking-widest rounded-lg border border-red-700 transition-colors"
-                        >
-                          {busyGroup === groupKey
-                            ? 'CLEANING…'
-                            : `${dryRun ? 'PREVIEW' : 'TRASH'} ${group.files.length - 1}, KEEP NEWEST`}
-                        </button>
+                        <div className="flex flex-col gap-2 shrink-0">
+                          <button
+                            onClick={() => cleanGroup(group)}
+                            disabled={busyGroup === groupKey}
+                            className="px-4 py-2 bg-red-900/60 hover:bg-red-800/80 disabled:opacity-50 text-red-200 text-xs tracking-widest rounded-lg border border-red-700 transition-colors"
+                          >
+                            {busyGroup === groupKey
+                              ? 'CLEANING…'
+                              : `${dryRun ? 'PREVIEW' : 'TRASH'} ${group.files.length - 1}, KEEP NEWEST`}
+                          </button>
+                          <button
+                            onClick={() => explainGroup(group)}
+                            disabled={explaining === groupKey}
+                            className="px-4 py-2 bg-[#1a1a2e] hover:bg-[#22223a] disabled:opacity-50 text-purple-300 text-xs tracking-widest rounded-lg border border-purple-800 transition-colors"
+                          >
+                            {explaining === groupKey ? 'THINKING…' : 'AI: WHY?'}
+                          </button>
+                        </div>
                       </div>
+                      {explanations[groupKey] && (
+                        <div className="mt-3 pt-3 border-t border-purple-900 text-slate-400 text-xs leading-relaxed">
+                          {explanations[groupKey]}
+                        </div>
+                      )}
                     </div>
                   )
                 })
@@ -368,12 +555,12 @@ export default function DriveCleaner() {
           {enabledModules.large && (
             <div className="space-y-4">
               <div className="font-mono text-xs text-purple-400 tracking-widest">
-                LARGE FILES ≥ {largeFileMb} MB {largeFiles.length > 0 && `(${largeFiles.length})`}
+                LARGE FILES ≥ {largeFileMb} MB {visibleLargeFiles.length > 0 && `(${visibleLargeFiles.length})`}
               </div>
-              {largeFiles.length === 0 ? (
+              {visibleLargeFiles.length === 0 ? (
                 <div className="font-mono text-sm text-slate-500">No files at or above this size.</div>
               ) : (
-                largeFiles.slice(0, 25).map((file) => (
+                visibleLargeFiles.slice(0, 25).map((file) => (
                   <div
                     key={file.id}
                     className="rounded-lg border border-purple-800 bg-[#1a1a2e]/50 p-4 font-mono text-sm flex items-start justify-between gap-4"
@@ -395,8 +582,8 @@ export default function DriveCleaner() {
                   </div>
                 ))
               )}
-              {largeFiles.length > 25 && (
-                <div className="font-mono text-xs text-slate-600">…and {largeFiles.length - 25} more.</div>
+              {visibleLargeFiles.length > 25 && (
+                <div className="font-mono text-xs text-slate-600">…and {visibleLargeFiles.length - 25} more.</div>
               )}
             </div>
           )}
@@ -405,12 +592,12 @@ export default function DriveCleaner() {
           {enabledModules.stale && (
             <div className="space-y-4">
               <div className="font-mono text-xs text-purple-400 tracking-widest">
-                STALE FILES — INACTIVE {staleDays}+ DAYS {staleFiles.length > 0 && `(${staleFiles.length})`}
+                STALE FILES — INACTIVE {staleDays}+ DAYS {visibleStaleFiles.length > 0 && `(${visibleStaleFiles.length})`}
               </div>
-              {staleFiles.length === 0 ? (
+              {visibleStaleFiles.length === 0 ? (
                 <div className="font-mono text-sm text-slate-500">Nothing has been inactive that long.</div>
               ) : (
-                staleFiles.slice(0, 25).map((file) => (
+                visibleStaleFiles.slice(0, 25).map((file) => (
                   <div
                     key={file.id}
                     className="rounded-lg border border-purple-800 bg-[#1a1a2e]/50 p-4 font-mono text-sm flex items-start justify-between gap-4"
@@ -437,8 +624,49 @@ export default function DriveCleaner() {
                   </div>
                 ))
               )}
-              {staleFiles.length > 25 && (
-                <div className="font-mono text-xs text-slate-600">…and {staleFiles.length - 25} more.</div>
+              {visibleStaleFiles.length > 25 && (
+                <div className="font-mono text-xs text-slate-600">…and {visibleStaleFiles.length - 25} more.</div>
+              )}
+            </div>
+          )}
+
+          {/* Automation sources */}
+          {enabledModules.automation && (
+            <div className="space-y-4">
+              <div className="font-mono text-xs text-purple-400 tracking-widest">
+                AUTOMATION SOURCES — APPS SCRIPT PROJECTS {visibleAutomationSources.length > 0 && `(${visibleAutomationSources.length})`}
+              </div>
+              {visibleAutomationSources.length === 0 ? (
+                <div className="font-mono text-sm text-slate-500">No Apps Script projects found.</div>
+              ) : (
+                <>
+                  <div className="font-mono text-xs text-slate-500 leading-relaxed">
+                    Any of these can hold a time-driven trigger that runs in the background even
+                    when you&apos;re not using it. Open one in the script editor and check
+                    Triggers (clock icon) to find and disable runaway automations.
+                  </div>
+                  {visibleAutomationSources.map((file) => (
+                    <div
+                      key={file.id}
+                      className="rounded-lg border border-purple-800 bg-[#1a1a2e]/50 p-4 font-mono text-sm flex items-start justify-between gap-4"
+                    >
+                      <div>
+                        <div className="text-slate-100 font-bold">{file.name}</div>
+                        <div className="text-slate-500 text-xs mt-2">
+                          Last modified: {formatDate(file.modifiedTime)}
+                        </div>
+                      </div>
+                      <a
+                        href={`https://script.google.com/d/${file.id}/edit`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="shrink-0 px-4 py-2 bg-purple-700 hover:bg-purple-600 text-white text-xs tracking-widest rounded-lg border border-purple-500 transition-colors"
+                      >
+                        OPEN SCRIPT
+                      </a>
+                    </div>
+                  ))}
+                </>
               )}
             </div>
           )}
