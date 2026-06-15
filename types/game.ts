@@ -27,5 +27,6 @@ export type SceneKey =
   | 'MainMenuScene'
   | 'ModeSelectorScene'
   | 'RPGScene'
+  | 'BattleScene'
   | 'ActionScene'
   | 'SimScene'

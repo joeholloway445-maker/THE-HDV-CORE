@@ -3,6 +3,7 @@ import { BootScene } from './scenes/BootScene'
 import { MainMenuScene } from './scenes/MainMenuScene'
 import { ModeSelectorScene } from './scenes/ModeSelectorScene'
 import { RPGScene } from './scenes/RPGScene'
+import { BattleScene } from './scenes/BattleScene'
 import { ActionScene } from './scenes/ActionScene'
 import { SimScene } from './scenes/SimScene'
 import { ExtraliminalScene } from './scenes/ExtraliminalScene'
@@ -19,6 +20,7 @@ export function createGameConfig(parent: HTMLElement): Types.Core.GameConfig {
       MainMenuScene,
       ModeSelectorScene,
       RPGScene,
+      BattleScene,
       ActionScene,
       SimScene,
       ExtraliminalScene,
