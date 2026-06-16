@@ -1,4 +1,4 @@
-export type GameMode = 'rpg' | 'action' | 'sim'
+export type GameMode = 'rpg' | 'action' | 'sim' | 'casino'
 
 export interface Player {
   id: string
@@ -30,3 +30,12 @@ export type SceneKey =
   | 'BattleScene'
   | 'ActionScene'
   | 'SimScene'
+  | 'CasinoScene'
+  | 'SlotsScene'
+  | 'BlackjackScene'
+  | 'RouletteScene'
+  | 'CrashScene'
+  | 'DiceScene'
+  | 'RacingScene'
+  | 'SportsScene'
+  | 'ArcadeScene'

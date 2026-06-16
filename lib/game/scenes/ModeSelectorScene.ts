@@ -30,9 +30,10 @@ export class ModeSelectorScene extends Phaser.Scene {
       .setOrigin(0.5)
 
     const modes: ModeCard[] = [
-      { x: width * 0.22, label: 'CHRONICLES', sub: 'RPG · Story · World', mode: 'rpg', scene: 'RPGScene', color: 0x22c55e },
-      { x: width * 0.5, label: 'FRACTURE', sub: 'Action · Combat · Speed', mode: 'action', scene: 'ActionScene', color: 0xef4444 },
-      { x: width * 0.78, label: 'DOMINION', sub: 'Sim · Build · Empire', mode: 'sim', scene: 'SimScene', color: 0x3b82f6 },
+      { x: width * 0.15, label: 'CHRONICLES', sub: 'RPG · Story · World',    mode: 'rpg',    scene: 'RPGScene',    color: 0x22c55e },
+      { x: width * 0.38, label: 'FRACTURE',   sub: 'Action · Combat · Speed', mode: 'action', scene: 'ActionScene', color: 0xef4444 },
+      { x: width * 0.62, label: 'DOMINION',   sub: 'Sim · Build · Empire',   mode: 'sim',    scene: 'SimScene',    color: 0x3b82f6 },
+      { x: width * 0.85, label: 'PAW VEGAS',  sub: 'Casino · 206+ Games',    mode: 'casino', scene: 'CasinoScene', color: 0xf59e0b },
     ]
 
     modes.forEach(({ x, label, sub, scene, color }) => {
