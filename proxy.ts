@@ -1,10 +1,10 @@
 import { createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
-// Browser pages that never require a signed-in user. /studio is the Dream
-// streaming surface — it runs entirely client-side + the in-memory backbone,
-// so it works as a public demo with no Supabase needed.
-const PUBLIC_ROUTES = ['/', '/login', '/signup', '/studio']
+// Browser pages that never require a signed-in user. /studio and /builder run
+// entirely client-side + the in-memory backbone, so they work as public demos
+// with no Supabase needed.
+const PUBLIC_ROUTES = ['/', '/login', '/signup', '/studio', '/builder']
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
