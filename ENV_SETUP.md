@@ -7,6 +7,10 @@ Copy these into a local `.env.local` (which is gitignored).
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
+# Supabase service role — server-only, powers PersonaMatrix ledger/tenant writes.
+# Never expose this client-side. Find it in Supabase dashboard > Project Settings > API.
+SUPABASE_SERVICE_ROLE_KEY=
+
 # HOPE companion (Anthropic)
 ANTHROPIC_API_KEY=
 
