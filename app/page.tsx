@@ -49,6 +49,12 @@ export default function HomePage() {
           >
             DREAM STUDIO →
           </Link>
+          <Link
+            href="/builder"
+            className="inline-block px-6 py-2 text-cyan-400 hover:text-cyan-300 font-mono text-xs tracking-widest border border-cyan-900 rounded-lg transition-colors"
+          >
+            BUILDER →
+          </Link>
         </div>
 
         <div className="mt-14 grid grid-cols-3 gap-4 text-left">
