@@ -58,7 +58,7 @@ const SLOT_THEMES = [
   { key: 'wildlands',    name: 'Wildlands Fortune',   skin: SKINS.wildlands,    symbols: SYMBOL_SETS.wildlands,    district: 'paw_vegas' as District },
   { key: 'hope',         name: 'HOPE Jackpot',        skin: SKINS.hope,         symbols: SYMBOL_SETS.hope,         district: 'paw_vegas' as District },
   { key: 'extraliminal', name: 'Extraliminal Reels',  skin: SKINS.extraliminal, symbols: SYMBOL_SETS.extraliminal, district: 'arcade_galaxy' as District },
-  { key: 'classic',      name: 'Paw Vegas Classic',   skin: SKINS.neon,         symbols: SYMBOL_SETS.classic,      district: 'paw_vegas' as District },
+  { key: 'classic',      name: 'Paws Vegas Classic',  skin: SKINS.neon,         symbols: SYMBOL_SETS.classic,      district: 'paw_vegas' as District },
   { key: 'crystal',      name: 'Crystal Cascade',     skin: SKINS.glacial,      symbols: SYMBOL_SETS.crystal,      district: 'paw_vegas' as District },
   { key: 'battle',       name: 'Fracture Slots',      skin: SKINS.volcanic,     symbols: SYMBOL_SETS.battle,       district: 'cat_coliseum' as District },
   { key: 'void',         name: 'Void Gate',           skin: SKINS.void_,        symbols: SYMBOL_SETS.sovereign,    district: 'arcade_galaxy' as District },

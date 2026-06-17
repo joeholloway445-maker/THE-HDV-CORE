@@ -34,7 +34,7 @@ export function createGameConfig(parent: HTMLElement): Types.Core.GameConfig {
       ActionScene,
       SimScene,
       ExtraliminalScene,
-      // Casino (Paw Vegas) — hub + game engines
+      // Casino (Paws Vegas) — hub + game engines
       CasinoScene,
       SlotsScene,
       BlackjackScene,

@@ -47,7 +47,7 @@ export class CasinoScene extends Phaser.Scene {
 
     // Title
     this.add
-      .text(width / 2, height * 0.06, 'PAW VEGAS', {
+      .text(width / 2, height * 0.06, 'PAWS VEGAS', {
         fontFamily: 'monospace',
         fontSize: '28px',
         color: '#f59e0b',
