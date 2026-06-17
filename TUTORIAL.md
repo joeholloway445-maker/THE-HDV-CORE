@@ -153,13 +153,45 @@ You don't write any GDScript yourself; that session reads your patterns and does
 | Dream visual deck (filters + chat + director + cost) | ✅ `public/dream-deck.html` |
 | Entity Roster importer | ✅ ready — needs the roster JSON exported from Drive |
 | Godot client | 📋 prompt ready in `GODOT_AI_SETUP.md` |
-| Streaming/chat: live chat, WebRTC video, voice (TTS/voice-changer), face filters (mediapipe) | ⏭️ next phase |
+| **Dream Studio** (`/studio`): filter chains + face filters + live persona chat + TTS + mic voice-changer + record | ✅ built — `components/studio/DreamStudio.tsx` |
+| SSE persona-chat automation route | ✅ `GET /api/personamatrix/stream` (verified live) |
 | VS Code-replica builder surface (from OKComputer zip) | ⏭️ next phase |
 | periliminal.space /dex + /matrix (GLSL filter ports, Three.js) | ⏭️ next phase |
 
-The next phase layers the full streaming/chat stack (voice + face filters) and
-the VS Code surface on top of this backbone — every one of them is "just another
-caller" of `/api/personamatrix/request`, which is why we built that first.
+The VS Code builder surface is the remaining big surface — like the studio, it's
+"just another caller" of the backbone, which is why we built that keystone first.
+
+---
+
+## Part 6 — The Dream Studio (`/studio`) — the live streaming surface
+
+`/studio` is the full streaming/chat layer, all on one canvas, all browser-native
+(no extra services, no keys to run it):
+
+- **Filter chains** — the same `scarecrow_proceedings` / `squid_round` /
+  `full_breakdown` stack, now a reusable TS module
+  (`lib/personamatrix/filters/engine.ts`) shared with the standalone deck.
+- **Face filters** — turn on the webcam + "track my face" to load MediaPipe's
+  468-point FaceLandmarker (lazy-loaded from CDN) and pin **entity eyes**, a
+  **scarecrow seam**, or a **third eye** to your real face
+  (`lib/streaming/faceFilters.ts`).
+- **Live persona chat** — the studio opens **one** SSE connection to
+  `GET /api/personamatrix/stream`; the server spawns commenter + filter_director
+  personas through the *same Apex backbone* and pushes each line down. Chat rate
+  scales with the energy slider; every spawn lands in the ledger. One connection,
+  the backbone decides who speaks — that's the automation route.
+- **Voice** — toggle "personas speak" for per-persona TTS (Web Speech API), and
+  pick an **entity / demon / chipmunk** preset to run *your* mic through a
+  real-time Web Audio pitch-shifter (`lib/streaming/voice.ts`).
+- **Record / go live** — `canvas.captureStream()` + the processed mic →
+  `MediaRecorder` downloads a `.webm` of the whole production.
+
+> Same guardrail as the deck: the simulated audience renders **into the frame**
+> as theater — it never posts to a real platform's chat.
+
+`/studio` sits behind the auth proxy like `/game`, so sign in first. The SSE
+route is verified end-to-end (200 `text/event-stream`, real persona bursts whose
+cadence tracks the energy param).
 
 ---
 

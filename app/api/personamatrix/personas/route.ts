@@ -7,12 +7,12 @@ export const runtime = "nodejs";
 // Entity Roster import script, never from a client.
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
-  const module = url.searchParams.get("module");
+  const mod = url.searchParams.get("module");
   const id = url.searchParams.get("id");
 
   const supabase = createAdminClient();
   let query = supabase.from("personas").select("*").order("id", { ascending: true });
-  if (module) query = query.eq("module", module);
+  if (mod) query = query.eq("module", mod);
   if (id) query = query.eq("id", Number(id));
 
   const { data, error } = await query;

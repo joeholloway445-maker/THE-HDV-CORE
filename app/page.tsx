@@ -36,12 +36,18 @@ export default function HomePage() {
           ENTER THE CORE
         </Link>
 
-        <div className="mt-4">
+        <div className="mt-4 flex items-center justify-center gap-3">
           <Link
             href="/cleaner"
             className="inline-block px-6 py-2 text-purple-400 hover:text-purple-300 font-mono text-xs tracking-widest border border-purple-900 rounded-lg transition-colors"
           >
             HOPE CLEANER →
+          </Link>
+          <Link
+            href="/studio"
+            className="inline-block px-6 py-2 text-fuchsia-400 hover:text-fuchsia-300 font-mono text-xs tracking-widest border border-fuchsia-900 rounded-lg transition-colors"
+          >
+            DREAM STUDIO →
           </Link>
         </div>
 
