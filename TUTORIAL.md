@@ -218,15 +218,16 @@ client surface:
   Code-style themes (dark/light/solarized/monokai/github) registered on mount.
 - **Real backend wiring — the Claude REPL terminal.** Typing `claude` in the
   bottom-panel terminal drops you into a REPL mode. In the original surface
-  this just chopped a static canned string into fake streamed tokens. Here,
-  every prompt instead opens a real `EventSource` against this app's existing
-  `GET /api/personamatrix/stream?energy=0.6&module=dream` route — the same SSE
-  mechanism `DreamStudio` uses — and renders the live `filter_director` /
-  `commenter` persona events (`components/builder/terminal/streamClaude.ts`,
-  typed via a `StreamMsg` interface mirroring `DreamStudio`'s) straight into
-  the terminal output. Each line printed is a persona that was actually
-  spawned, executed, and terminated by `lib/personamatrix/matrix.ts`, with its
-  cost landing in the `persona_ledger` table — not replayed text.
+  this just chopped the user's own typed line into fake streamed tokens and
+  echoed it back. Here, every prompt instead fires a real
+  `POST /api/personamatrix/request` (module `"apex"`, role `"commenter"`,
+  `task: { context: <prompt> }`) and types out the actual `result.text` it
+  gets back (`components/builder/terminal/streamClaude.ts`, typed via a
+  `PersonaMatrixResponse` interface — no `any`). The token-by-token reveal is
+  still done locally for the streaming visual effect, but the content
+  originates from a persona that was actually spawned, executed, and
+  terminated by `lib/personamatrix/matrix.ts`, with its cost landing in the
+  `persona_ledger` table — not replayed or canned text.
 
 `/builder` is not gated by the auth proxy (it's a local dev-tool surface), but
 its one live network call goes through the same Apex backbone as everything

@@ -8,8 +8,9 @@ import { streamClaudeReply } from './streamClaude';
 const CLAUDE_BANNER =
   '* Claude REPL — PersonaMatrix backbone\n' +
   '  \n' +
-  '  Connected to the live dream-module SSE stream (/api/personamatrix/stream).\n' +
-  '  Every line below is a real persona: spawned, executed, and terminated server-side.\n' +
+  '  Each message is sent to POST /api/personamatrix/request\n' +
+  '  (module "apex", role "commenter") and the reply below is a real\n' +
+  '  persona response, spawned/executed/terminated server-side.\n' +
   '  Type a message or use /help for available commands.\n';
 
 export function Terminal() {
