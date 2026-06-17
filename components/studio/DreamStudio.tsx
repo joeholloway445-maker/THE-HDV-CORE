@@ -16,11 +16,19 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { applyChain, directorPick, CHAINS, CHAIN_ORDER, type ChainName } from '@/lib/personamatrix/filters/engine'
 import { speakAs, stopSpeaking, VoiceChanger, type VoicePreset } from '@/lib/streaming/voice'
-import { loadFaceLandmarker, drawFaceFilter, type FaceFilter } from '@/lib/streaming/faceFilters'
+import { loadFaceLandmarker, drawFaceFilter, type FaceFilter, type FaceLandmarkerResult } from '@/lib/streaming/faceFilters'
 
 const W = 960, H = 540
 
 interface ChatMsg { id: number; persona: number; text: string }
+
+interface StreamMsg {
+  kind: 'hello' | 'director' | 'chat'
+  persona?: number
+  text?: string
+  cost_usd?: number
+  energy?: number
+}
 
 const FACE_FILTERS: { id: FaceFilter; label: string }[] = [
   { id: 'none', label: 'None' },
@@ -39,7 +47,7 @@ export default function DreamStudio() {
   const chainRef = useRef<ChainName | null>(null)
   const faceFilterRef = useRef<FaceFilter>('none')
   const landmarkerRef = useRef<Awaited<ReturnType<typeof loadFaceLandmarker>>>(null)
-  const lastFaceRef = useRef<any>(null)
+  const lastFaceRef = useRef<FaceLandmarkerResult | null>(null)
   const voiceChangerRef = useRef<VoiceChanger | null>(null)
   const voiceStreamRef = useRef<MediaStream | null>(null)
   const esRef = useRef<EventSource | null>(null)
@@ -115,19 +123,16 @@ export default function DreamStudio() {
     esRef.current?.close()
     const es = new EventSource(`/api/personamatrix/stream?energy=${e.toFixed(2)}&module=dream`)
     es.onmessage = (ev) => {
-      let m: any
+      let m: StreamMsg
       try { m = JSON.parse(ev.data) } catch { return }
       if (m.kind === 'director') {
-        if (autoDir && typeof m.energy !== 'undefined') {
-          const pick = directorPick(energy)
-          setChain(pick)
-        }
-        setStats((s) => ({ execs: s.execs + 1, cost: s.cost + (m.cost_usd || 0) + 0.0000004, alive: s.alive }))
+        if (autoDir) setChain(directorPick(energy))
+        setStats((s) => ({ execs: s.execs + 1, cost: s.cost + (m.cost_usd ?? 0) + 0.0000004, alive: s.alive }))
         return
       }
-      if (m.kind === 'chat' && m.text) {
-        setChat((c) => [...c.slice(-40), { id: tRef.current, persona: m.persona, text: m.text }])
-        setStats((s) => ({ execs: s.execs + 1, cost: s.cost + (m.cost_usd || 0) + 0.0000004, alive: s.alive }))
+      if (m.kind === 'chat' && m.text && typeof m.persona === 'number') {
+        setChat((c) => [...c.slice(-40), { id: tRef.current, persona: m.persona!, text: m.text! }])
+        setStats((s) => ({ execs: s.execs + 1, cost: s.cost + (m.cost_usd ?? 0) + 0.0000004, alive: s.alive }))
         if (ttsOn) speakAs(m.persona, m.text)
       }
     }
@@ -140,11 +145,6 @@ export default function DreamStudio() {
     return () => esRef.current?.close()
     // re-open when energy changes meaningfully so the server cadence updates
   }, [openStream, energy])
-
-  // auto-director also nudges the chain locally each energy change
-  useEffect(() => {
-    if (autoDir) setChain(directorPick(energy))
-  }, [autoDir, energy])
 
   // ---- webcam ----------------------------------------------------------------
   const toggleCam = useCallback(async () => {

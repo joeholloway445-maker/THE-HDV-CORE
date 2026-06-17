@@ -17,7 +17,7 @@ const VISION_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22
 
 // Minimal structural types so we don't depend on the package at build time.
 interface NormalizedLandmark { x: number; y: number; z: number }
-interface FaceLandmarkerResult { faceLandmarks: NormalizedLandmark[][] }
+export interface FaceLandmarkerResult { faceLandmarks: NormalizedLandmark[][] }
 interface FaceLandmarkerLike {
   detectForVideo(video: HTMLVideoElement, ts: number): FaceLandmarkerResult;
   close(): void;
@@ -29,7 +29,10 @@ export function loadFaceLandmarker(): Promise<FaceLandmarkerLike | null> {
   if (landmarkerPromise) return landmarkerPromise;
   landmarkerPromise = (async () => {
     try {
-      const vision: any = await import(/* webpackIgnore: true */ `${VISION_CDN}/vision_bundle.mjs`);
+      const vision = (await import(/* webpackIgnore: true */ `${VISION_CDN}/vision_bundle.mjs`)) as {
+        FilesetResolver: { forVisionTasks(wasmPath: string): Promise<unknown> };
+        FaceLandmarker: { createFromOptions(fileset: unknown, opts: Record<string, unknown>): Promise<FaceLandmarkerLike> };
+      };
       const fileset = await vision.FilesetResolver.forVisionTasks(`${VISION_CDN}/wasm`);
       const landmarker = await vision.FaceLandmarker.createFromOptions(fileset, {
         baseOptions: {

@@ -36,6 +36,12 @@ export async function proxy(request: NextRequest) {
     return supabaseResponse
   }
 
+  // API routes own their own auth (public reads, X-Api-Key tenant billing, or
+  // none at all) — the session-cookie check below is for browser pages only.
+  if (pathname.startsWith('/api/')) {
+    return supabaseResponse
+  }
+
   // Redirect unauthenticated users away from protected routes
   const isPublic = PUBLIC_ROUTES.includes(pathname)
   if (!user && !isPublic) {

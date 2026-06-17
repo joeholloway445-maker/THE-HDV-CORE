@@ -23,8 +23,8 @@ const VALID: PersonaModule[] = ["dream", "hope", "no_one", "vision", "apex"];
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const module = (searchParams.get("module") ?? "dream") as PersonaModule;
-  if (!VALID.includes(module)) {
+  const mod = (searchParams.get("module") ?? "dream") as PersonaModule;
+  if (!VALID.includes(mod)) {
     return new Response(`data: ${JSON.stringify({ error: "bad module" })}\n\n`, {
       status: 400,
       headers: { "content-type": "text/event-stream" },
@@ -34,7 +34,6 @@ export async function GET(req: NextRequest) {
   if (!Number.isFinite(energy)) energy = 0.5;
   energy = Math.min(1, Math.max(0, energy));
 
-  const apiKey = req.headers.get("x-api-key");
   const enc = new TextEncoder();
   let closed = false;
 
@@ -60,23 +59,23 @@ export async function GET(req: NextRequest) {
         if (closed) return;
         // Every few beats a filter_director re-reads energy and picks a chain.
         if (Math.random() < 0.25) {
-          const { result, cost_usd } = matrixRequest(module, "filter_director", { energy });
+          const { result, cost_usd } = matrixRequest(mod, "filter_director", { energy });
           send({ ...result, cost_usd, kind: "director" });
-          ledger.push(ledgerRow(module, "filter_director", result, cost_usd, apiKey));
+          ledger.push(ledgerRow(mod, "filter_director", result, cost_usd));
         }
         // A burst of commenters scaled by energy.
         const burst = 1 + Math.floor(Math.random() * (1 + energy * 4));
         for (let i = 0; i < burst; i++) {
-          const { result, cost_usd } = matrixRequest(module, "commenter", { context: "the proceedings" });
+          const { result, cost_usd } = matrixRequest(mod, "commenter", { context: "the proceedings" });
           send({ ...result, cost_usd, kind: "chat" });
-          ledger.push(ledgerRow(module, "commenter", result, cost_usd, apiKey));
+          ledger.push(ledgerRow(mod, "commenter", result, cost_usd));
         }
         void flushLedger();
         // Faster cadence at higher energy.
         timer = setTimeout(beat, 1200 - energy * 800);
       };
 
-      send({ kind: "hello", module, energy });
+      send({ kind: "hello", module: mod, energy });
       let timer = setTimeout(beat, 200);
 
       const keepAlive = setInterval(() => {
@@ -112,7 +111,6 @@ function ledgerRow(
   role: string,
   result: Record<string, unknown>,
   cost_usd: number,
-  _apiKey: string | null,
 ) {
   // Columns mirror supabase/migrations/002_personamatrix.sql exactly. The
   // stream stays anonymous-by-default (tenant_id null); the per-tenant billed
