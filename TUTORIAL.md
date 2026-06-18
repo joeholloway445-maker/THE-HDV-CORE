@@ -155,11 +155,11 @@ You don't write any GDScript yourself; that session reads your patterns and does
 | Godot client | 📋 prompt ready in `GODOT_AI_SETUP.md` |
 | **Dream Studio** (`/studio`): filter chains + face filters + live persona chat + TTS + mic voice-changer + record | ✅ built — `components/studio/DreamStudio.tsx` |
 | SSE persona-chat automation route | ✅ `GET /api/personamatrix/stream` (verified live) |
-| VS Code-replica builder surface (from OKComputer zip) | ⏭️ next phase |
+| VS Code-replica builder surface (from OKComputer zip) | ✅ built — `components/builder/BuilderShell.tsx` (`/builder`) |
 | periliminal.space /dex + /matrix (GLSL filter ports, Three.js) | ⏭️ next phase |
 
-The VS Code builder surface is the remaining big surface — like the studio, it's
-"just another caller" of the backbone, which is why we built that keystone first.
+Like the studio, the builder surface is "just another caller" of the backbone —
+see Part 7 below for how its terminal wires into real PersonaMatrix traffic.
 
 ---
 
@@ -192,6 +192,46 @@ The VS Code builder surface is the remaining big surface — like the studio, it
 `/studio` sits behind the auth proxy like `/game`, so sign in first. The SSE
 route is verified end-to-end (200 `text/event-stream`, real persona bursts whose
 cadence tracks the energy param).
+
+---
+
+## Part 7 — The Builder (`/builder`) — a VS Code-replica surface on the backbone
+
+`/builder` ports a standalone VS Code Web clone (title bar, activity bar,
+explorer/search/SCM/run-debug/extensions sidebar, tab bar + Monaco editor,
+bottom panel, status bar, command palette) into this app as a self-contained
+client surface:
+
+- **Shell** — `components/builder/BuilderShell.tsx` assembles the title bar,
+  activity bar, sidebar, tab bar, Monaco editor area, bottom panel, and status
+  bar, plus a `cmdk`-powered command palette (`Cmd/Ctrl+Shift+P` for commands,
+  `Cmd/Ctrl+P` for go-to-file). It's mounted via `next/dynamic` with
+  `ssr: false` (through `BuilderShellLoader.tsx`, a client wrapper — this
+  Next.js version requires that option to be set from a Client Component) so
+  IndexedDB, `window`, and Monaco's worker bootstrapping never run during SSR.
+- **State** — Zustand stores under `lib/builder/store/*` hold the file tree,
+  open tabs, sidebar view, git/SCM demo state, extensions, terminal tabs, and
+  theme; `lib/builder/utils/persistence.ts` persists files/tabs/settings to an
+  `idb`-backed IndexedDB database. The file tree, SCM panel, and problems panel
+  are cosmetic demo content, same as the source project.
+- **Editor** — `@monaco-editor/react` renders the active tab with VS
+  Code-style themes (dark/light/solarized/monokai/github) registered on mount.
+- **Real backend wiring — the Claude REPL terminal.** Typing `claude` in the
+  bottom-panel terminal drops you into a REPL mode. In the original surface
+  this just chopped the user's own typed line into fake streamed tokens and
+  echoed it back. Here, every prompt instead fires a real
+  `POST /api/personamatrix/request` (module `"apex"`, role `"commenter"`,
+  `task: { context: <prompt> }`) and types out the actual `result.text` it
+  gets back (`components/builder/terminal/streamClaude.ts`, typed via a
+  `PersonaMatrixResponse` interface — no `any`). The token-by-token reveal is
+  still done locally for the streaming visual effect, but the content
+  originates from a persona that was actually spawned, executed, and
+  terminated by `lib/personamatrix/matrix.ts`, with its cost landing in the
+  `persona_ledger` table — not replayed or canned text.
+
+`/builder` is not gated by the auth proxy (it's a local dev-tool surface), but
+its one live network call goes through the same Apex backbone as everything
+else in this app.
 
 ---
 

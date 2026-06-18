@@ -27,17 +27,22 @@ export default function SignupPage() {
     }
 
     setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signUp({ email, password })
 
-    if (error) {
-      setError(error.message)
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+        return
+      }
+
+      router.push('/character-creation')
+      router.refresh()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Sign-up failed')
       setLoading(false)
-      return
     }
-
-    router.push('/character-creation')
-    router.refresh()
   }
 
   return (
