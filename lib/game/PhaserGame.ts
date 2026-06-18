@@ -1,4 +1,4 @@
-import type { Types } from 'phaser'
+import Phaser, { type Types } from 'phaser'
 import { BootScene } from './scenes/BootScene'
 import { MainMenuScene } from './scenes/MainMenuScene'
 import { ModeSelectorScene } from './scenes/ModeSelectorScene'
