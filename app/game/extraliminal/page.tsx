@@ -1,8 +1,8 @@
-import PeriliminalGameLoader from '@/components/game/PeriliminalGameLoader'
+import ExtraliminalGameLoader from '@/components/game/ExtraliminalGameLoader'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export default async function PeriliminalPage() {
+export default async function ExtraliminalPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -17,7 +17,7 @@ export default async function PeriliminalPage() {
 
   return (
     <div className="w-full h-screen overflow-hidden bg-[#0f0f1a]">
-      <PeriliminalGameLoader
+      <ExtraliminalGameLoader
         playerData={{
           faction: character.faction,
           race: character.race,

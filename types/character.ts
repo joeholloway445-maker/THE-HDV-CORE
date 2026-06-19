@@ -22,6 +22,7 @@ export interface Faction {
 export interface Race {
   id: string
   name: string
+  faction: FactionId
   description: string
   texture: {
     type: string

@@ -60,6 +60,12 @@ export default function ProfilePage() {
         >
           PLAY
         </Link>
+        <Link
+          href="/creations"
+          className="flex-1 text-center py-3 rounded-lg border border-purple-700 font-mono text-sm text-purple-300 hover:bg-purple-900/40 tracking-widest transition-colors"
+        >
+          BLUEPRINT WORKSHOP
+        </Link>
       </div>
     </main>
   )

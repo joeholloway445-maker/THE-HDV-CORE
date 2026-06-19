@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist_Mono } from 'next/font/google'
 import HopeCompanion from '@/components/HopeCompanion'
+import PostHogProvider from '@/components/PostHogProvider'
 import './globals.css'
 
 const geistMono = Geist_Mono({
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistMono.variable} h-full`}>
       <body className="h-full bg-[#0f0f1a] text-slate-200 antialiased">
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
         <HopeCompanion />
       </body>
     </html>
