@@ -60,12 +60,13 @@ observed:
 - Larger power gaps push further toward the extremes; smaller gaps (near
   "equal-ish") sit near the middle/neutral point of the scale.
 
-Open implementation question (for later): which direction maps to which end
-— e.g. does looking at something far stronger render it more "holographic"
-(idealized/luminous) while looking at something far weaker renders it more
-"distorted" (degraded/glitchy)? Or the reverse? This needs a decision before
-building the renderer, but the *structure* (tier-delta -> position on a
-holographic<->distorted continuum) is locked in.
+**Resolved:** the stronger the observed is relative to the observer, the more
+**holographic** (idealized/luminous) it renders. The weaker the observed is
+relative to the observer, the more **distorted** (degraded/glitchy) it
+renders. So `tier_delta` maps directly onto the scale — positive delta
+(observed stronger) pushes toward super-holographic, negative delta (observed
+weaker) pushes toward super-distorted, and near-zero delta sits near the
+neutral midpoint.
 
 ## Interaction With Existing Systems
 
@@ -109,7 +110,6 @@ lights/sounds, and physics/combat math all flow through per power-tier delta.
 
 ## Next Steps (not started)
 
-- Decide the holographic <-> distorted direction mapping per power-tier delta
 - Define data model for Race visual presets, Frame light/sound presets
 - Define a `view_id` (A–S) + `tier_delta` -> fidelity-level lookup
 - Wire view resolution into the renderer based on observer/observed
