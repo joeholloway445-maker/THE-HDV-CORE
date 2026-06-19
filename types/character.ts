@@ -32,6 +32,8 @@ export interface Race {
   }
   lore: string
   statBonus: Partial<{ power: number; agility: number; resonance: number; frequency: number }>
+  passive: { name: string; effect: string }
+  drawback: string
 }
 
 export interface Frame {
@@ -48,6 +50,8 @@ export interface Frame {
   mobility: string        // description of movement style
   combatStyle: string
   lore: string
+  frameType: 'light' | 'heavy'
+  exclusiveStat: { name: string; effect: string }
 }
 
 export interface PhysicalMod {
@@ -56,6 +60,8 @@ export interface PhysicalMod {
   description: string
   visualEffect: string
   statModifier: Partial<{ power: number; agility: number; resonance: number; frequency: number }>
+  bonus: string
+  drawback: string
 }
 
 export interface CharacterDraft {

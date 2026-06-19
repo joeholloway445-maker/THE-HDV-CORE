@@ -59,8 +59,14 @@ export default function StepFrame({ value, onChange }: { value: string | null; o
                   : 'border-slate-800 bg-[#1a1a2e]/40 hover:border-slate-600'
               }`}
             >
-              <div className="font-mono text-xs text-slate-200 mb-0.5">{frame.name}</div>
-              <div className="font-mono text-xs text-purple-600 mb-2">{frame.role}</div>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="font-mono text-xs text-slate-200">{frame.name}</span>
+                <span className="font-mono text-xs text-slate-600 uppercase">{frame.frameType}</span>
+              </div>
+              <div className="font-mono text-xs text-purple-600 mb-1">{frame.role}</div>
+              <div className="font-mono text-xs text-cyan-400 mb-2">
+                {frame.exclusiveStat.name} — {frame.exclusiveStat.effect}
+              </div>
               <div className="space-y-1">
                 {Object.entries(frame.stats).map(([stat, val]) => (
                   <div key={stat} className="flex items-center gap-2">

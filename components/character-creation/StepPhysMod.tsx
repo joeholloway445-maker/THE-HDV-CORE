@@ -27,6 +27,10 @@ export default function StepPhysMod({ value, onChange }: { value: string | null;
               <div className="font-mono text-xs text-slate-500 leading-tight line-clamp-2 mb-1.5">
                 {mod.description}
               </div>
+              <div className="font-mono text-xs text-cyan-400 mb-0.5">{mod.bonus}</div>
+              {mod.drawback && mod.drawback !== 'None' && (
+                <div className="font-mono text-xs text-red-500/80 mb-1">{mod.drawback}</div>
+              )}
               {Object.keys(mod.statModifier).length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {Object.entries(mod.statModifier).map(([stat, val]) => (

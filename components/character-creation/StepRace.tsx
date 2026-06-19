@@ -65,6 +65,10 @@ export default function StepRace({ value, onChange }: { value: string | null; on
                   ))}
                 </div>
               )}
+              <div className="mt-1.5 font-mono text-xs text-cyan-400">
+                {race.passive.name} — {race.passive.effect}
+              </div>
+              <div className="font-mono text-xs text-red-500/80">{race.drawback}</div>
             </button>
           )
         })}
