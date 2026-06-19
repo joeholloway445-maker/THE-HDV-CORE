@@ -163,6 +163,7 @@ export class BattleScene extends Phaser.Scene {
     })
 
     this.appendLog(`A wild ${this.enemy.entity.name} (${this.enemy.entity.title}) appears!`)
+    this.recordEntity(this.enemy.entity.id, false)
     this.updateHpBars()
     this.updateTurnLabel()
 
@@ -317,6 +318,7 @@ export class BattleScene extends Phaser.Scene {
 
       if (this.enemy.hp <= 0) {
         this.appendLog(`${this.enemy.entity.name} is defeated!`)
+        this.recordEntity(this.enemy.entity.id, true)
         this.endBattle('victory')
         return
       }
@@ -362,6 +364,16 @@ export class BattleScene extends Phaser.Scene {
     this.playerTurn = true
     this.updateTurnLabel()
     this.setActionsEnabled(true)
+  }
+
+  private recordEntity(entityId: string, caught: boolean) {
+    fetch('/api/entities/record', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entityId, caught }),
+    }).catch(() => {
+      // Best-effort OmniDex sync — battle continues regardless.
+    })
   }
 
   private endBattle(result: 'victory' | 'defeat' | 'fled') {

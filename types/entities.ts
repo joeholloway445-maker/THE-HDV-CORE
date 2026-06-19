@@ -27,4 +27,5 @@ export interface PlayerEntity {
   entity_type: EntityRole
   count: number
   first_encountered_at: string
+  caught_at: string | null
 }
