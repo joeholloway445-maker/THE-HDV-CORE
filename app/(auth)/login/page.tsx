@@ -17,17 +17,22 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError(error.message)
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+        return
+      }
+
+      router.push('/game')
+      router.refresh()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Sign-in failed')
       setLoading(false)
-      return
     }
-
-    router.push('/game')
-    router.refresh()
   }
 
   return (

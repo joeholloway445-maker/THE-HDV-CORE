@@ -11,12 +11,14 @@ export default function GameCanvas() {
     let game: import('phaser').Game | null = null
 
     // Dynamic import keeps Phaser out of the SSR bundle
-    import('phaser').then((Phaser) => {
-      import('@/lib/game/PhaserGame').then(({ createGameConfig }) => {
+    Promise.all([import('phaser'), import('@/lib/game/PhaserGame')])
+      .then(([{ default: Phaser }, { createGameConfig }]) => {
         if (!containerRef.current) return
         game = new Phaser.Game(createGameConfig(containerRef.current))
       })
-    })
+      .catch((err) => {
+        console.error('Failed to initialize game:', err)
+      })
 
     return () => {
       game?.destroy(true)
