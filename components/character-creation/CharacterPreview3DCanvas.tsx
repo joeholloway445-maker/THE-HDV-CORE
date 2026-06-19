@@ -21,19 +21,26 @@ const SILHOUETTE_COLOR = 0x2a2a3d
  */
 function buildFigure(): THREE.Group {
   const group = new THREE.Group()
-  const material = new THREE.MeshStandardMaterial({ color: SILHOUETTE_COLOR, roughness: 0.6, metalness: 0.1 })
+  const material = new THREE.MeshStandardMaterial({
+    color: SILHOUETTE_COLOR,
+    roughness: 0.5,
+    metalness: 0.2,
+    envMapIntensity: 1,
+  })
 
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 0.55, 4, 8), material)
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 0.55, 8, 16), material)
   torso.position.y = 1.05
   torso.name = 'torso'
+  torso.castShadow = true
   group.add(torso)
 
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), material)
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 24), material)
   head.position.y = 1.68
   head.name = 'head'
+  head.castShadow = true
   group.add(head)
 
-  const limbGeo = new THREE.CapsuleGeometry(0.09, 0.55, 4, 8)
+  const limbGeo = new THREE.CapsuleGeometry(0.09, 0.55, 8, 16)
   const positions: [string, number, number, number][] = [
     ['arm_l', -0.42, 1.1, 0],
     ['arm_r', 0.42, 1.1, 0],
@@ -44,10 +51,11 @@ function buildFigure(): THREE.Group {
     const limb = new THREE.Mesh(limbGeo, material.clone())
     limb.position.set(x, y, z)
     limb.name = name
+    limb.castShadow = true
     group.add(limb)
   }
 
-  const accent = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.03, 8, 24), material.clone())
+  const accent = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.03, 8, 32), material.clone())
   accent.position.y = 1.05
   accent.rotation.x = Math.PI / 2
   accent.name = 'accent'
@@ -55,6 +63,31 @@ function buildFigure(): THREE.Group {
   group.add(accent)
 
   return group
+}
+
+// Maps each race's texture.type (drawn from its AI-prompt visual brief) to
+// material treatment, since the placeholder mesh has no real surface art.
+const TEXTURE_MATERIAL: Record<string, Partial<THREE.MeshStandardMaterial>> = {
+  radiant: { roughness: 0.25, metalness: 0.5 },
+  mutated: { roughness: 0.85, metalness: 0.05 },
+  abyssal: { roughness: 0.3, metalness: 0.6 },
+  spectral: { roughness: 0.4, metalness: 0.1, transparent: true, opacity: 0.78 },
+  phasic: { roughness: 0.35, metalness: 0.2, transparent: true, opacity: 0.7 },
+  temporal: { roughness: 0.3, metalness: 0.7 },
+  voidlike: { roughness: 0.6, metalness: 0.3 },
+  symbiotic: { roughness: 0.8, metalness: 0.0 },
+  digital: { roughness: 0.2, metalness: 0.4 },
+  biotech: { roughness: 0.45, metalness: 0.55 },
+  dimensional: { roughness: 0.3, metalness: 0.5 },
+  amphibious: { roughness: 0.75, metalness: 0.05 },
+  solar: { roughness: 0.2, metalness: 0.4 },
+  crystalline: { roughness: 0.1, metalness: 0.7 },
+  electric: { roughness: 0.25, metalness: 0.3 },
+  morphic: { roughness: 0.4, metalness: 0.1 },
+  regal: { roughness: 0.4, metalness: 0.6 },
+  decayed: { roughness: 0.9, metalness: 0.0 },
+  crystal: { roughness: 0.05, metalness: 0.8, transparent: true, opacity: 0.9 },
+  celestial: { roughness: 0.2, metalness: 0.6 },
 }
 
 export default function CharacterPreview3DCanvas({ race, frame, mod }: Props) {
@@ -66,7 +99,8 @@ export default function CharacterPreview3DCanvas({ race, frame, mod }: Props) {
     if (!container) return
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0f0f1a)
+    scene.background = new THREE.Color(0x12121f)
+    scene.fog = new THREE.Fog(0x12121f, 4, 9)
 
     const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100)
     camera.position.set(0, 1.1, 3.2)
@@ -74,15 +108,31 @@ export default function CharacterPreview3DCanvas({ race, frame, mod }: Props) {
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(container.clientWidth, container.clientHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.shadowMap.enabled = true
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap
     container.appendChild(renderer.domElement)
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5))
-    const key = new THREE.DirectionalLight(0xffffff, 1.2)
+    scene.add(new THREE.HemisphereLight(0x8aa2ff, 0x1a1a2a, 0.6))
+    const key = new THREE.DirectionalLight(0xffffff, 1.4)
     key.position.set(2, 4, 3)
+    key.castShadow = true
+    key.shadow.mapSize.set(1024, 1024)
     scene.add(key)
-    const rim = new THREE.DirectionalLight(0x6366f1, 0.6)
-    rim.position.set(-3, 1, -2)
+    const rim = new THREE.DirectionalLight(0x6366f1, 0.8)
+    rim.position.set(-3, 1.5, -2)
     scene.add(rim)
+    const fill = new THREE.DirectionalLight(0xffffff, 0.3)
+    fill.position.set(0, 1, -3)
+    scene.add(fill)
+
+    const ground = new THREE.Mesh(
+      new THREE.CircleGeometry(1.6, 48),
+      new THREE.MeshStandardMaterial({ color: 0x1c1c2e, roughness: 0.9, metalness: 0 })
+    )
+    ground.rotation.x = -Math.PI / 2
+    ground.position.y = -0.9
+    ground.receiveShadow = true
+    scene.add(ground)
 
     const figure = buildFigure()
     figure.position.y = -0.9
@@ -127,11 +177,16 @@ export default function CharacterPreview3DCanvas({ race, frame, mod }: Props) {
     const figure = figureRef.current
     if (!figure) return
     const color = race ? race.texture.tintHex : SILHOUETTE_COLOR
+    const treatment = race ? TEXTURE_MATERIAL[race.texture.type] : undefined
     figure.traverse((obj) => {
       if (obj instanceof THREE.Mesh && obj.material instanceof THREE.MeshStandardMaterial) {
         obj.material.color.setHex(color)
         obj.material.emissive.setHex(race ? color : 0x000000)
-        obj.material.emissiveIntensity = race ? 0.12 : 0
+        obj.material.emissiveIntensity = race ? 0.18 : 0
+        obj.material.roughness = treatment?.roughness ?? 0.5
+        obj.material.metalness = treatment?.metalness ?? 0.2
+        obj.material.transparent = treatment?.transparent ?? false
+        obj.material.opacity = treatment?.opacity ?? 1
       }
     })
   }, [race])
