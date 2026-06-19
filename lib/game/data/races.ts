@@ -8,7 +8,7 @@ export const RACES: Race[] = [
     description: 'Mourning spirits whose unified voice turns grief into a weapon — Sorrow Amplification.',
     texture: { type: 'ashen-spectral', description: 'Drifting grey ash that swirls like a robe of smoke', primaryColor: '#818cf8', tintHex: 0x818cf8 },
     lore: 'The Ashen Choir sing dirges that ripple through the Veiled Current, amplifying sorrow into power.',
-    statBonus: { resonance: 2, frequency: 1 },
+    statBonus: { resonance: 2, agility: -1, frequency: -1 },
   },
   {
     id: 'chronarchs',
@@ -17,7 +17,7 @@ export const RACES: Race[] = [
     description: 'Time-touched nobles who can Micro-Rewind moments to undo small mistakes.',
     texture: { type: 'chronal', description: 'Faint afterimages trail every movement, like a film skipping backward', primaryColor: '#fcd34d', tintHex: 0xfcd34d },
     lore: 'The Chronarchs serve the Sovereign Crown by guarding the smallest threads of fate.',
-    statBonus: { frequency: 2, agility: 1 },
+    statBonus: { frequency: 2, power: -2 },
   },
   {
     id: 'coldmarrow',
@@ -26,7 +26,7 @@ export const RACES: Race[] = [
     description: 'Bone-deep cold radiates from their marrow, projecting a Freeze Aura on all who draw near.',
     texture: { type: 'frostbone', description: 'Pale blue-white skin with visible frost crystallizing along bone lines', primaryColor: '#5eead4', tintHex: 0x5eead4 },
     lore: 'Born in the frozen wastes beyond the Wildlands, the Coldmarrow carry winter in their bones.',
-    statBonus: { power: 2, frequency: 1 },
+    statBonus: { power: 2, agility: -2 },
   },
   {
     id: 'pulseborn',
@@ -35,7 +35,7 @@ export const RACES: Race[] = [
     description: 'Living capacitors whose hearts discharge a Shock Dash AoE in bursts of kinetic energy.',
     texture: { type: 'electric', description: 'Veins of crackling gold light pulse beneath translucent skin', primaryColor: '#fde68a', tintHex: 0xfde68a },
     lore: "A Pulseborn's heartbeat is a drumbeat the Sovereign Crown marches to.",
-    statBonus: { agility: 2, frequency: 2 },
+    statBonus: { agility: 2, frequency: 1, power: -2, resonance: -1 },
   },
   {
     id: 'sunspun',
@@ -44,7 +44,7 @@ export const RACES: Race[] = [
     description: 'Woven from captured sunlight, they unleash a Radiant Burst when Focus reaches its max.',
     texture: { type: 'radiant', description: 'Constant warm glow with flares of light at the fingertips and crown', primaryColor: '#fef08a', tintHex: 0xfef08a },
     lore: 'The Sunspun were spun from the first dawn the Sovereign Crown ever blessed.',
-    statBonus: { resonance: 2, agility: 1 },
+    statBonus: { resonance: 2, frequency: -2 },
   },
   {
     id: 'elyrian',
@@ -62,7 +62,7 @@ export const RACES: Race[] = [
     description: 'Shadow-born infiltrators whose Shadow Weaving turns darkness into cloaks and blades.',
     texture: { type: 'shadow', description: 'Matte black form that seems to drink in nearby light', primaryColor: '#312e81', tintHex: 0x312e81 },
     lore: 'The Umbran move through the Veiled Current like ink through water.',
-    statBonus: { agility: 2 },
+    statBonus: { agility: 2, resonance: -2 },
   },
   {
     id: 'stormborn',
@@ -71,7 +71,7 @@ export const RACES: Race[] = [
     description: 'Children of the wild storms, crackling with a natural Lightning Affinity.',
     texture: { type: 'storm', description: 'Storm-grey skin laced with restless veins of static', primaryColor: '#2dd4bf', tintHex: 0x2dd4bf },
     lore: "A Stormborn's mood can be read in the static crackling off their skin.",
-    statBonus: { agility: 1 },
+    statBonus: { agility: 2, power: -2 },
   },
   {
     id: 'ashborne',
@@ -80,7 +80,7 @@ export const RACES: Race[] = [
     description: 'Survivors of the Wildlands infernos, granted lasting Fire Resistance.',
     texture: { type: 'ember', description: 'Charcoal-dark skin with embers glowing faintly in cracks', primaryColor: '#f87171', tintHex: 0xf87171 },
     lore: 'Every Ashborne carries the memory of the fire that should have ended them.',
-    statBonus: { power: 2 },
+    statBonus: { power: 2, frequency: -2 },
   },
   {
     id: 'tidal_kin',
@@ -89,7 +89,7 @@ export const RACES: Race[] = [
     description: 'Ocean-blooded wanderers whose Water Manipulation bends tides to their will.',
     texture: { type: 'aqueous', description: 'Flowing water-like surface with deep current patterns', primaryColor: '#38bdf8', tintHex: 0x38bdf8 },
     lore: 'Tidal Kin hear the whispers of the Veiled Current in every wave.',
-    statBonus: { frequency: 1 },
+    statBonus: { frequency: 1, resonance: 1, agility: -2 },
   },
   {
     id: 'voidwalker',
@@ -98,7 +98,7 @@ export const RACES: Race[] = [
     description: 'Beings who slip through tears in reality, taking a Void Step between spaces.',
     texture: { type: 'void', description: 'Featureless dark purple form that seems to recede from view', primaryColor: '#4c1d95', tintHex: 0x4c1d95 },
     lore: 'A Voidwalker leaves no footprints — they were never quite there.',
-    statBonus: { agility: 2 },
+    statBonus: { agility: 1, frequency: 1, power: -2 },
   },
   {
     id: 'earthshaper',
@@ -107,7 +107,7 @@ export const RACES: Race[] = [
     description: 'Stone-skinned architects whose Terrakinesis reshapes the ground beneath their feet.',
     texture: { type: 'lithic', description: 'Layered stone-and-clay skin with visible strata bands', primaryColor: '#b45309', tintHex: 0xb45309 },
     lore: "The Sovereign Crown's foundations were laid by Earthshaper hands.",
-    statBonus: { power: 2 },
+    statBonus: { power: 2, resonance: -2 },
   },
   {
     id: 'star_touched',
@@ -116,7 +116,7 @@ export const RACES: Race[] = [
     description: 'Marked at birth by falling stars, granted flashes of Cosmic Insight.',
     texture: { type: 'astral', description: 'Skin flecked with tiny points of light like a captured night sky', primaryColor: '#c4b5fd', tintHex: 0xc4b5fd },
     lore: 'Star-touched eyes hold galaxies that have not yet been born.',
-    statBonus: { resonance: 2 },
+    statBonus: { resonance: 2, power: -2 },
   },
   {
     id: 'deep_dweller',
@@ -125,7 +125,7 @@ export const RACES: Race[] = [
     description: 'Trench-born creatures whose Abyssal Vision lets them see clearly in total darkness.',
     texture: { type: 'abyssal', description: 'Deep teal-black skin with faint bioluminescent markings', primaryColor: '#0e7490', tintHex: 0x0e7490 },
     lore: "Deep Dwellers surfaced from the Wildlands' bottomless trenches, eyes wide with old light.",
-    statBonus: { frequency: 2 },
+    statBonus: { frequency: 2, resonance: -2 },
   },
   {
     id: 'windrider',
@@ -143,7 +143,7 @@ export const RACES: Race[] = [
     description: 'Oath-bound warriors whose Blood Magic is paid for in their own vitality.',
     texture: { type: 'sanguine', description: 'Deep crimson markings that pulse brighter when magic is drawn', primaryColor: '#b91c1c', tintHex: 0xb91c1c },
     lore: 'Every Bloodsworn carries a debt written in their own veins.',
-    statBonus: { resonance: 1 },
+    statBonus: { resonance: 1, frequency: 1, power: -2 },
   },
   {
     id: 'ironclad',
@@ -161,7 +161,7 @@ export const RACES: Race[] = [
     description: 'Weavers of dream-fabric whose Illusion Crafting blurs reality and fantasy.',
     texture: { type: 'mirage', description: 'Shifting iridescent patterns that never settle into one shape', primaryColor: '#f0abfc', tintHex: 0xf0abfc },
     lore: "The Veiled Current trusts no eyes more than a Dreamweaver's — and no eyes less.",
-    statBonus: { resonance: 2 },
+    statBonus: { resonance: 2, power: -1, frequency: -1 },
   },
   {
     id: 'tech_priest',
@@ -170,7 +170,7 @@ export const RACES: Race[] = [
     description: 'Augmented clergy whose Cybernetic Enhancement fuses devotion with precision machinery.',
     texture: { type: 'cybernetic', description: 'Chrome plating inlaid with glowing gold circuitry over the skin', primaryColor: '#fcd34d', tintHex: 0xfcd34d },
     lore: 'To a Tech-priest, circuitry is scripture and code is prayer.',
-    statBonus: { frequency: 2 },
+    statBonus: { frequency: 2, agility: -2 },
   },
   {
     id: 'feral_kin',
@@ -179,7 +179,7 @@ export const RACES: Race[] = [
     description: 'Beast-bonded wildfolk whose Beast Empathy lets them call on the instincts of the hunt.',
     texture: { type: 'feral', description: 'Fur and scale patches across humanoid form, claws always bared', primaryColor: '#65a30d', tintHex: 0x65a30d },
     lore: 'Feral Kin speak a language older than words — the language of the hunt.',
-    statBonus: { power: 2 },
+    statBonus: { power: 2, agility: -1, frequency: -1 },
   },
 ]
 
