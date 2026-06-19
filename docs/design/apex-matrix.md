@@ -31,11 +31,28 @@ just cosmetic skins on the player's own roster — a strong differentiator.
   (Frame), and physics/combat math (Mod) are inherited from the underlying
   creation, same as for the owning player.
 
+## Promotion / Verification Criteria — Resolved
+
+A player's creation is usable **unrestricted within that player's own
+personal Subliminal Space** with no review needed — it's private to them.
+
+To go **anywhere else** (Apex Matrix promotion, or any visibility/use outside
+the owner's Subliminal Space), the creation must first be **manually
+verified**:
+
+1. Player submits the creation via a ticket in the official Discord.
+2. A dedicated community moderation team (separate from the dev team)
+   reviews it for checks and balances — this is the human-run version of the
+   UGC Pipeline's "QA & Moderation" and "Balancing & Stat Normalization"
+   stages.
+3. Only after the community team clears it does it reach the dev team for
+   final addition (e.g. Apex Matrix slot placement, broader deployment).
+
+This is a human-gated pipeline, not an automated QA score or pure player
+vote — the Discord ticket + community review team *is* the moderation layer.
+
 ## Open Design Questions (for later)
 
-- Promotion criteria: how does a creation get selected/approved to fill an
-  Apex Matrix slot (manual curation, automated QA score threshold, player
-  voting, rotation)?
 - Storyline authorship: who writes the "fiction" layer for a promoted
   creation — the original player, procedurally generated, or staff-curated?
 - Slot structure: is 4096 a flat pool, or organized (e.g. by zone/faction/

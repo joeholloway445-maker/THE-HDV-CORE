@@ -53,12 +53,18 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex gap-4 flex-wrap">
         <Link
-          href="/game"
+          href="/character-select"
           className="flex-1 text-center py-3 rounded-lg bg-purple-700 hover:bg-purple-600 font-mono text-sm text-white tracking-widest transition-colors border border-purple-500"
         >
           PLAY
+        </Link>
+        <Link
+          href="/omnidex"
+          className="flex-1 text-center py-3 rounded-lg border border-purple-700 font-mono text-sm text-purple-300 hover:bg-purple-900/40 tracking-widest transition-colors"
+        >
+          OMNIDEX
         </Link>
         <Link
           href="/creations"

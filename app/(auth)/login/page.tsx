@@ -27,7 +27,7 @@ export default function LoginPage() {
         return
       }
 
-      router.push('/game')
+      router.push('/character-select')
       router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Sign-in failed')

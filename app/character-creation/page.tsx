@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import StepFaction from '@/components/character-creation/StepFaction'
 import StepRace from '@/components/character-creation/StepRace'
 import StepFrame from '@/components/character-creation/StepFrame'
@@ -16,7 +16,17 @@ import type { CharacterDraft, FactionId } from '@/types/character'
 const STEPS = ['FACTION', 'RACE', 'FRAME', 'PHYSICAL MOD', 'CONFIRM']
 
 export default function CharacterCreationPage() {
+  return (
+    <Suspense fallback={null}>
+      <CharacterCreationForm />
+    </Suspense>
+  )
+}
+
+function CharacterCreationForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const slotNumber = Number(searchParams.get('slot') ?? '1') || 1
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -46,18 +56,31 @@ export default function CharacterCreationPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      const { error: charError } = await supabase.from('characters').insert({
-        user_id: user.id,
-        faction: draft.faction,
-        race: draft.race,
-        frame: draft.frame,
-        physical_mod: draft.physicalMod,
-      })
+      const { data: inserted, error: charError } = await supabase
+        .from('characters')
+        .insert({
+          user_id: user.id,
+          faction: draft.faction,
+          race: draft.race,
+          frame: draft.frame,
+          physical_mod: draft.physicalMod,
+          slot_number: slotNumber,
+        })
+        .select('id')
+        .single()
 
       if (charError && charError.code !== '23505') {
         setError(charError.message)
         setSaving(false)
         return
+      }
+
+      if (inserted) {
+        await fetch('/api/character/select', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ characterId: inserted.id }),
+        })
       }
 
       router.push('/game/extraliminal')
