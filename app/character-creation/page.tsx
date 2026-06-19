@@ -6,6 +6,7 @@ import StepFaction from '@/components/character-creation/StepFaction'
 import StepRace from '@/components/character-creation/StepRace'
 import StepFrame from '@/components/character-creation/StepFrame'
 import StepPhysMod from '@/components/character-creation/StepPhysMod'
+import CharacterPreview3D from '@/components/character-creation/CharacterPreview3D'
 import { FACTIONS } from '@/lib/game/data/factions'
 import { getRaceById } from '@/lib/game/data/races'
 import { getFrameById } from '@/lib/game/data/frames'
@@ -91,9 +92,9 @@ function CharacterCreationForm() {
   }
 
   const faction = draft.faction ? FACTIONS[draft.faction] : null
-  const race = draft.race ? getRaceById(draft.race) : null
-  const frame = draft.frame ? getFrameById(draft.frame) : null
-  const mod = draft.physicalMod ? getModById(draft.physicalMod) : null
+  const race = (draft.race ? getRaceById(draft.race) : null) ?? null
+  const frame = (draft.frame ? getFrameById(draft.frame) : null) ?? null
+  const mod = (draft.physicalMod ? getModById(draft.physicalMod) : null) ?? null
 
   return (
     <div className="min-h-screen bg-[#0f0f1a] px-4 py-8">
@@ -119,6 +120,13 @@ function CharacterCreationForm() {
         <div className="mb-2 font-mono text-xs text-purple-600 tracking-widest">
           STEP {step + 1} OF {STEPS.length} — {STEPS[step]}
         </div>
+
+        {/* Live 3D preview — recolors/reshapes as Race/Frame/Mod are picked */}
+        {step >= 1 && step <= 3 && (
+          <div className="mb-6">
+            <CharacterPreview3D race={race} frame={frame} mod={mod} />
+          </div>
+        )}
 
         {/* Step content */}
         <div className="rounded-xl border border-purple-900 bg-[#1a1a2e]/50 p-6 mb-6">
