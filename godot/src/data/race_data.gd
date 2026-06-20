@@ -4,7 +4,7 @@ extends Node
 ## render/runtime copy. Keep the two in sync by hand until a shared JSON
 ## export pipeline exists (see scripts/export_game_data.ts, not yet built).
 
-const RACES: Array[Dictionary] = [
+static var RACES: Array[Dictionary] = [
 	{
 		"id": "lumenari", "name": "Lumenari", "faction": "veiled_current",
 		"texture_type": "radiant", "primary_color": Color.html("#ffd24a"),
