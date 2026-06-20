@@ -22,6 +22,13 @@ const HUBS: Array[Dictionary] = [
 		"scene_path": "res://scenes/worlds/hubs/denton.tscn",
 		"chunk_bounds": {"x": -10, "y": -10, "w": 8, "h": 8},
 	},
+	{
+		"id": "arlington", "name": "Arlington Replica",
+		"faction": "neutral",
+		"description": "Third faction hub, sited between Dallas-Fort Worth and Denton. Houses the Arena, Marketplace, University, and the Station gate to gated/external worlds.",
+		"scene_path": "res://scenes/worlds/hubs/arlington.tscn",
+		"chunk_bounds": {"x": 0, "y": -10, "w": 8, "h": 8},
+	},
 ]
 
 static func by_id(id: String) -> Dictionary:
