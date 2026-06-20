@@ -16,6 +16,7 @@ config/features=PackedStringArray("4.3", "Forward Plus")
 
 GameData="*res://src/core/game_data.gd"
 WorldRegistry="*res://src/core/world_registry.gd"
+DiscoveryManager="*res://src/world/discovery_manager.gd"
 
 [rendering]
 

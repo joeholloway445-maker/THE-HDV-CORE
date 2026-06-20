@@ -11,6 +11,13 @@ var selected_frame_id: String = ""
 var selected_mod_id: String = ""
 var age_verified: bool = false
 
+## Drives discover-mechanic influence weighting (DiscoveryManager) — not part
+## of the race/frame/mod combat stat schema, separate progression track.
+var perception: int = 1
+
+func build_influence_pack(player_id: String) -> PlayerInfluencePack:
+	return PlayerInfluencePack.from_loadout(player_id, current_loadout(), perception)
+
 func get_race(id: String) -> Dictionary:
 	return RaceData.by_id(id)
 
