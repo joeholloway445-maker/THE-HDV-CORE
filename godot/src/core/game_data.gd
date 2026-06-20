@@ -15,8 +15,18 @@ var age_verified: bool = false
 ## of the race/frame/mod combat stat schema, separate progression track.
 var perception: int = 1
 
+## Recruited AmbientNpcs — companions, pets, and mounts. Each entry:
+## {"npc_id": String, "kind": "companion"|"pet"|"mount", "display_name": String}
+var companions: Array[Dictionary] = []
+
 func build_influence_pack(player_id: String) -> PlayerInfluencePack:
 	return PlayerInfluencePack.from_loadout(player_id, current_loadout(), perception)
+
+func recruit_companion(npc_id: String, kind: String, display_name: String) -> void:
+	for c in companions:
+		if c["npc_id"] == npc_id:
+			return # already recruited
+	companions.append({"npc_id": npc_id, "kind": kind, "display_name": display_name})
 
 func get_race(id: String) -> Dictionary:
 	return RaceData.by_id(id)
