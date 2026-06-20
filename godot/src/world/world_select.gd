@@ -26,3 +26,6 @@ func _on_world_list_item_activated(index: int) -> void:
 		get_tree().change_scene_to_file(world["scene_path"])
 	else:
 		push_warning("World '%s' has no scene built yet." % world["name"])
+
+func _on_game_modes_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/game_mode_store.tscn")

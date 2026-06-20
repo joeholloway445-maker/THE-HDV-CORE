@@ -20,7 +20,44 @@ signal recruited(npc_id: String, kind: String)
 ## "" (not recruitable), "companion", "pet", or "mount".
 @export var recruitable_as: String = ""
 
+## Wander behavior: picks a random point within wander_radius of the spawn
+## origin, walks to it, idles briefly, repeats — the visible "day-to-day
+## task" loop. Purely cosmetic; has no bearing on _should_react_to_player_presence().
+@export var wander_radius: float = 6.0
+@export var wander_speed: float = 1.6
+@export var idle_time_range: Vector2 = Vector2(1.5, 4.0)
+
 var _has_been_interacted_with: bool = false
+var _origin: Vector3
+var _wander_target: Vector3
+var _idle_timer: float = 0.0
+var _is_idling: bool = true
+
+func _ready() -> void:
+	_origin = position
+	_wander_target = _origin
+
+func _process(delta: float) -> void:
+	if _is_idling:
+		_idle_timer -= delta
+		if _idle_timer <= 0.0:
+			_pick_new_wander_target()
+		return
+	var to_target := _wander_target - position
+	to_target.y = 0.0
+	if to_target.length() <= 0.1:
+		_is_idling = true
+		_idle_timer = randf_range(idle_time_range.x, idle_time_range.y)
+		return
+	position += to_target.normalized() * wander_speed * delta
+	if to_target.length() > 0.01:
+		look_at(position + to_target, Vector3.UP)
+
+func _pick_new_wander_target() -> void:
+	var angle := randf_range(0.0, TAU)
+	var dist := randf_range(0.0, wander_radius)
+	_wander_target = _origin + Vector3(cos(angle) * dist, 0.0, sin(angle) * dist)
+	_is_idling = false
 
 func _should_react_to_player_presence() -> bool:
 	return GameModeManager.is_aware() or _has_been_interacted_with

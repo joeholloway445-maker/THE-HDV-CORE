@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/world/reality_layer_world.gd" id="1"]
 [ext_resource type="Environment" path="res://assets/environments/supraliminal.tres" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/ambient_npc.tscn" id="3"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(50, 50)
@@ -34,6 +35,28 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1")
 [node name="StationTower" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, -8)
 mesh = SubResource("BoxMesh_1")
+
+[node name="MarketVendor" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 3)
+npc_id = "arlington_market_vendor"
+daily_task = "tending a market stall"
+recruitable_as = "companion"
+wander_radius = 3.0
+
+[node name="StreetSweeper" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 5)
+npc_id = "arlington_street_sweeper"
+daily_task = "sweeping the plaza"
+recruitable_as = ""
+wander_radius = 8.0
+
+[node name="StrayDog"  parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+npc_id = "arlington_stray_dog"
+daily_task = "wandering near the station tower"
+recruitable_as = "pet"
+wander_radius = 5.0
+wander_speed = 2.2
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.94, 0.34, 0, -0.34, 0.94, 0, 4, 9)

@@ -20,6 +20,14 @@ func advance_to_mod_review(ticket_url: String) -> void:
 	discord_ticket_url = ticket_url
 	status = Status.MOD_REVIEW
 
+## Posts this submission to the configured Discord webhook (DiscordTicketClient)
+## and advances to MOD_REVIEW with the resulting ticket link. If no webhook is
+## configured, still advances to MOD_REVIEW with an empty ticket_url so the
+## submission isn't stuck — mods can be notified manually until a webhook is set.
+func submit_ticket() -> void:
+	var ticket_url: String = await DiscordTicketClient.post_ticket(self)
+	advance_to_mod_review(ticket_url)
+
 func mod_decide(approved: bool, notes: String = "") -> void:
 	status = Status.MOD_APPROVED if approved else Status.MOD_REJECTED
 	mod_notes = notes

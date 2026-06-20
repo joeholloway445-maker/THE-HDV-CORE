@@ -27,4 +27,13 @@ offset_top = 100.0
 offset_right = 600.0
 offset_bottom = 500.0
 
+[node name="GameModesButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 510.0
+offset_right = 260.0
+offset_bottom = 550.0
+text = "Game Modes / Store"
+
 [connection signal="item_activated" from="WorldList" to="." method="_on_world_list_item_activated"]
+[connection signal="pressed" from="GameModesButton" to="." method="_on_game_modes_pressed"]

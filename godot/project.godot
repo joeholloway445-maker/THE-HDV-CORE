@@ -18,7 +18,9 @@ GameData="*res://src/core/game_data.gd"
 WorldRegistry="*res://src/core/world_registry.gd"
 DiscoveryManager="*res://src/world/discovery_manager.gd"
 GameModeManager="*res://src/core/game_mode_manager.gd"
+GameModeStore="*res://src/core/game_mode_store.gd"
 PersonaMatrixClient="*res://src/networking/persona_matrix_client.gd"
+DiscordTicketClient="*res://src/networking/discord_ticket_client.gd"
 
 [rendering]
 
