@@ -31,3 +31,6 @@ func _on_world_list_item_activated(index: int) -> void:
 
 func _on_game_modes_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/game_mode_store.tscn")
+
+func _on_character_creator_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/character_creator.tscn")
