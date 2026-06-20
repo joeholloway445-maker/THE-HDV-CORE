@@ -21,6 +21,7 @@ GameModeManager="*res://src/core/game_mode_manager.gd"
 GameModeStore="*res://src/core/game_mode_store.gd"
 PersonaMatrixClient="*res://src/networking/persona_matrix_client.gd"
 DiscordTicketClient="*res://src/networking/discord_ticket_client.gd"
+ExternalGameLauncher="*res://src/networking/external_game_launcher.gd"
 
 [rendering]
 
