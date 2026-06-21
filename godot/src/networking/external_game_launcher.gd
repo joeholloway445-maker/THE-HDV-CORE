@@ -1,11 +1,10 @@
 extends Node
 ## Launches an external Godot-game executable (e.g. CATSINO.CASINO) as a
 ## separate process, passing a player_id and a --return-to flag so the
-## receiving project can (once it implements the matching parser) hand the
-## player back to this game's hub when they're done. No shared filesystem/
-## URI-scheme convention exists between these repos yet — this is the
-## launching half only; CATSINO.CASINO does not yet parse these args
-## (confirmed: no OS.get_cmdline_args() usage there as of this writing).
+## receiving project can hand the player back to this game's hub when
+## they're done. CATSINO.CASINO's `ExternalHandoff` autoload parses these
+## same args (--player-id=, --return-to=) on its side — see
+## godot/src/core/external_handoff.gd in that repo.
 
 ## Per-platform executable basenames, keyed by external_repo id from
 ## WorldRegistry. Paths are resolved relative to executable_dir, which the
