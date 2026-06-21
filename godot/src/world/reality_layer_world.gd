@@ -54,7 +54,9 @@ func _on_portal_pressed(portal_id: String) -> void:
 		push_warning("'%s' requires age verification — not yet wired up here." % world["name"])
 		return
 	if world.get("external", false):
-		push_warning("'%s' lives in an external project (%s) — launch it separately for now." % [world["name"], world.get("external_repo", "unknown")])
+		var repo: String = world.get("external_repo", "")
+		if not ExternalGameLauncher.launch(repo, "local_player", world_id):
+			push_warning("'%s' lives in an external project (%s) — launch it separately for now." % [world["name"], repo])
 		return
 	if world.get("scene_path", "") != "" and ResourceLoader.exists(world["scene_path"]):
 		get_tree().change_scene_to_file(world["scene_path"])

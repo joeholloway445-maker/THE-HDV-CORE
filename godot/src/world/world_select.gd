@@ -20,9 +20,17 @@ func _on_world_list_item_activated(index: int) -> void:
 	var worlds := WorldRegistry.accessible_worlds(GameData.age_verified)
 	var world: Dictionary = worlds[index]
 	if world["external"]:
-		push_warning("World '%s' lives in an external project (%s) — launch it separately for now." % [world["name"], world.get("external_repo", "unknown")])
+		var repo: String = world.get("external_repo", "")
+		if not ExternalGameLauncher.launch(repo, "local_player", world["id"]):
+			push_warning("World '%s' lives in an external project (%s) — launch it separately for now." % [world["name"], repo])
 		return
 	if world["scene_path"] != "" and ResourceLoader.exists(world["scene_path"]):
 		get_tree().change_scene_to_file(world["scene_path"])
 	else:
 		push_warning("World '%s' has no scene built yet." % world["name"])
+
+func _on_game_modes_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/game_mode_store.tscn")
+
+func _on_character_creator_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/character_creator.tscn")
