@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
       caught_at: caught ? new Date().toISOString() : null,
     })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (caught) await grantFragmentsForKill(supabase, entity.tier)
     return NextResponse.json({ ok: true })
   }
 
@@ -40,7 +41,18 @@ export async function POST(request: NextRequest) {
       })
       .eq('id', existing.id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    await grantFragmentsForKill(supabase, entity.tier)
   }
 
   return NextResponse.json({ ok: true })
+}
+
+// Fragments are the PvE reward currency (spec: "won via PvE quests and NPC
+// kills"); every confirmed entity defeat grants some, scaled by tier. Best
+// effort -- a missing currency ledger shouldn't block recording the kill.
+async function grantFragmentsForKill(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  tier: number
+) {
+  await supabase.rpc('grant_currency', { p_currency: 'fragments', p_amount: tier * 2 })
 }
