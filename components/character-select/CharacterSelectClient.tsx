@@ -74,6 +74,9 @@ export default function CharacterSelectClient({ slots, characters, coin }: Props
             <a href="/omnidex" className="font-mono text-xs text-purple-500 hover:text-purple-300">
               OMNIDEX →
             </a>
+            <a href="/endgame" className="font-mono text-xs text-purple-500 hover:text-purple-300">
+              ROADMAP →
+            </a>
           </div>
         </div>
         <p className="font-mono text-xs text-purple-600 mb-6">Choose an existing build or create a new one to continue.</p>
