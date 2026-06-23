@@ -68,6 +68,9 @@ export default function CharacterSelectClient({ slots, characters, coin }: Props
         <div className="flex items-center justify-between mb-2">
           <h1 className="font-mono text-xl text-slate-200 tracking-widest">SELECT YOUR BUILD</h1>
           <div className="flex items-center gap-4">
+            <a href="/campaign" className="font-mono text-xs text-purple-500 hover:text-purple-300">
+              CAMPAIGN →
+            </a>
             <a href="/story" className="font-mono text-xs text-purple-500 hover:text-purple-300">
               PLOTS →
             </a>

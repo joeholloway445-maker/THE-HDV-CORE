@@ -19,12 +19,17 @@ const ROADMAP: RoadmapEntry[] = [
     blurb: 'Player-voted overarching plots, one new arc per season.',
     href: '/story',
   },
+  {
+    key: 'campaigns',
+    title: 'PvP Campaigns',
+    blurb: 'Always-on, open-world faction warfare -- no closed zones, kills count 24/7. Everything else PvP feeds into this.',
+    href: '/campaign',
+  },
   { key: 'duels', title: '1v1 / 2v2 PvP', blurb: 'Small-scale ranked duels and team skirmishes.' },
   { key: 'moba', title: 'MOBA', blurb: 'Lane/jungle/objective modes, Mobile-Legends-style.' },
   { key: 'conflict', title: 'Conflict', blurb: 'Classic team shooter modes -- deathmatch, domination, and more.' },
   { key: 'zombies', title: 'Zombies', blurb: 'Wave-survival co-op with our own tiered entities.' },
-  { key: 'campaigns', title: 'PvP Campaigns', blurb: 'Persistent faction-vs-faction warfare with territory stakes.' },
-  { key: 'dungeons', title: 'Dungeons & Boss Fights', blurb: 'ESO/WoW-style instanced encounters and raid bosses.' },
+  { key: 'dungeons', title: 'Dungeons & Boss Fights', blurb: 'ESO/WoW-style instanced encounters and raid bosses (PvE -- closed/instanced zones).' },
   { key: 'ugc', title: 'UGC', blurb: 'Player-created content, building on the existing companion blueprint system.' },
 ]
 
