@@ -67,9 +67,14 @@ export default function CharacterSelectClient({ slots, characters, coin }: Props
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-2">
           <h1 className="font-mono text-xl text-slate-200 tracking-widest">SELECT YOUR BUILD</h1>
-          <a href="/omnidex" className="font-mono text-xs text-purple-500 hover:text-purple-300">
-            OMNIDEX →
-          </a>
+          <div className="flex items-center gap-4">
+            <a href="/story" className="font-mono text-xs text-purple-500 hover:text-purple-300">
+              PLOTS →
+            </a>
+            <a href="/omnidex" className="font-mono text-xs text-purple-500 hover:text-purple-300">
+              OMNIDEX →
+            </a>
+          </div>
         </div>
         <p className="font-mono text-xs text-purple-600 mb-6">Choose an existing build or create a new one to continue.</p>
 
