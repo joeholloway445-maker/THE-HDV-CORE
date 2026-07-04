@@ -349,6 +349,8 @@ export class ExtraliminalScene extends Phaser.Scene {
         this.playerData.currencies.fragments += entity.tier * 3
         this.playerData.currencies.renown += entity.tier
         this.updateHUD()
+        this.persistCurrencyGrant('fragments', entity.tier * 3)
+        this.persistCurrencyGrant('renown', entity.tier)
 
         this.encounterText
           .setText(`✦ ${entity.name.toUpperCase()} ✦\n${entity.title}\n+${entity.tier * 3} Fragments  +${entity.tier} Renown`)
@@ -365,5 +367,17 @@ export class ExtraliminalScene extends Phaser.Scene {
         })
       }
     }
+  }
+
+  // Currency gains are applied to this.playerData.currencies immediately for
+  // a responsive HUD, but that's purely client-side scene state -- this
+  // persists the same gain server-side so it survives reload. Best-effort:
+  // a failed network call shouldn't interrupt gameplay.
+  private persistCurrencyGrant(currency: 'fragments' | 'renown', amount: number): void {
+    fetch('/api/currencies/grant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currency, amount }),
+    }).catch(() => {})
   }
 }
