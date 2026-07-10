@@ -13,3 +13,8 @@
 HDV-specific content was migrated under the `hdv_lore/` namespace in the
 monorepo's Godot project (autoloads `GameData`, `WorldRegistry`,
 `PersonaMatrixClient`, `ExternalGameLauncher`).
+
+For how this fits into the rest of the Periliminal Space account (Godot
+combat-AI reference, AI world-model/LLM forks, sister web apps), see
+[`docs/ECOSYSTEM.md`](https://github.com/joeholloway445-maker/CATSINO.CASINO/blob/HEAD/docs/ECOSYSTEM.md)
+in the monorepo.
