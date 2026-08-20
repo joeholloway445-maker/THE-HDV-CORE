@@ -91,6 +91,82 @@ export const AGENTS: AgentDef[] = [
           { id: 'vk-t2', name: 'Rotation Scheduler', type: 'function', description: 'Automated secret rotation', status: 'enabled', callCount: 48 },
         ],
       },
+      {
+        id: 'knoll-supabase-rls', parentId: 'knoll', name: 'SupabaseRLS', role: 'Row-Level Security Enforcer',
+        description: 'Enforces Supabase RLS policies across all 9 tables. Owner-only access via auth.uid() checks ensure no cross-user data leakage in the HDV system.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['RLS policy enforcement','Owner-only access','auth.uid() gating','Table-level policies','Realtime RLS'],
+        tools: [
+          { id: 'srls-t1', name: 'Supabase Client', type: 'api', description: 'Supabase JS client with RLS', status: 'enabled', callCount: 22104 },
+          { id: 'srls-t2', name: 'Policy Inspector', type: 'security', description: 'Validates RLS policies at runtime', status: 'enabled', callCount: 5502 },
+        ],
+      },
+      {
+        id: 'knoll-freeze-gate', parentId: 'knoll', name: 'FreezeGate', role: 'KNOLL Hard-Stop Controller',
+        description: 'Implements the KNOLL freeze mechanism from hdv_foundation. When triggered, KNOLL can hard-stop all agent activity, lock sessions, and enter audit-only mode.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['Hard stop','Session lock','Audit-only mode','Emergency freeze','Freeze log'],
+        tools: [
+          { id: 'fg-t1', name: 'Freeze Trigger', type: 'security', description: 'Atomic freeze signal broadcaster', status: 'enabled', callCount: 3 },
+          { id: 'fg-t2', name: 'State Snapshot', type: 'memory', description: 'System state capture at freeze point', status: 'enabled', callCount: 3 },
+        ],
+      },
+      {
+        id: 'knoll-redis-cache', parentId: 'knoll', name: 'RedisCache', role: 'Session & Rate-Limit Cache',
+        description: 'Redis-backed caching layer for session tokens, rate-limit counters, and ephemeral security state. Zero-TTL invalidation on suspicious activity.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Session caching','Rate-limit counters','Token blacklist','TTL management','Pub/Sub alerts'],
+        tools: [
+          { id: 'rc-t1', name: 'Redis Client', type: 'memory', description: 'Redis connection pool', status: 'enabled', callCount: 44021 },
+        ],
+      },
+      {
+        id: 'knoll-legal-gates', parentId: 'knoll', name: 'LegalGates', role: 'Compliance & Legal Enforcer',
+        description: 'Enforces legal constraints before any creator payout, identity verification, or data export. Blocks actions that violate compliance rules.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['Compliance check','GDPR gating','Creator eligibility','Export controls','Jurisdiction rules'],
+        tools: [
+          { id: 'lg-t1', name: 'Compliance Engine', type: 'security', description: 'Rule-based legal compliance checker', status: 'enabled', callCount: 2201 },
+        ],
+      },
+      {
+        id: 'knoll-tenancy-manager', parentId: 'knoll', name: 'TenancyManager', role: 'Multi-Tenant Access Isolator',
+        description: 'Manages tenant isolation, BYOK key scoping, and subscription tier enforcement from hdv_foundation tenancy layer.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['Tenant isolation','BYOK scoping','Tier enforcement','Tenant provisioning','Cross-tenant barrier'],
+        tools: [
+          { id: 'tm-t1', name: 'Tenant Registry', type: 'memory', description: 'Prisma-backed tenant store', status: 'enabled', callCount: 1804 },
+          { id: 'tm-t2', name: 'BYOK Validator', type: 'security', description: 'Validates bring-your-own-key credentials', status: 'enabled', callCount: 890 },
+        ],
+      },
+      {
+        id: 'knoll-gvisor-sandbox', parentId: 'knoll', name: 'gVisorSandbox', role: 'Secure Execution Sandbox',
+        description: 'gVisor-based container sandbox for Vision execution. Isolates all code runs, file I/O, and network calls from the host system.',
+        status: 'active', memoryType: 'none',
+        capabilities: ['Container isolation','Syscall interception','Network sandbox','File I/O control','gVisor runsc'],
+        tools: [
+          { id: 'gv-t1', name: 'gVisor Runtime', type: 'security', description: 'gVisor runsc container runtime', status: 'enabled', callCount: 312 },
+        ],
+      },
+      {
+        id: 'knoll-observability', parentId: 'knoll', name: 'Observability', role: 'System Health & Metrics Layer',
+        description: 'Aggregates health metrics, latency traces, and error rates across all agents. Powers the KNOLL dashboard and alerts on degraded subsystems.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Health metrics','Latency tracing','Error rate tracking','Agent health checks','Alert routing'],
+        tools: [
+          { id: 'ob-t1', name: 'Metrics Collector', type: 'io', description: 'Structured metrics aggregation', status: 'enabled', callCount: 88041 },
+          { id: 'ob-t2', name: 'Trace Exporter', type: 'io', description: 'Distributed trace export', status: 'enabled', callCount: 22010 },
+        ],
+      },
+      {
+        id: 'knoll-prisma-guard', parentId: 'knoll', name: 'PrismaGuard', role: 'Database Query Interceptor',
+        description: 'Intercepts all Prisma ORM queries for audit logging, injection detection, and query budget enforcement before hitting PostgreSQL.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Query interception','SQL injection detection','Query budgeting','Prisma middleware','Audit log bridge'],
+        tools: [
+          { id: 'pg-t1', name: 'Prisma Middleware', type: 'security', description: 'Prisma query middleware chain', status: 'enabled', callCount: 33201 },
+        ],
+      },
     ],
   },
 
@@ -180,6 +256,83 @@ export const AGENTS: AgentDef[] = [
         capabilities: ['Style selection','Vocabulary control','Consistency enforcement','Multi-mode voice','Tone calibration'],
         tools: [
           { id: 'nv-t1', name: 'Style Templates', type: 'function', description: 'Voice and style template engine', status: 'enabled', callCount: 32041 },
+        ],
+      },
+      {
+        id: 'hope-anthropic-client', parentId: 'hope', name: 'AnthropicClient', role: 'Claude SDK Integration',
+        description: 'Direct integration with the Anthropic SDK (@anthropic-ai/sdk). Manages streaming, tool use, system prompts, and context window for all Claude model calls.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Streaming responses','Tool use','System prompt injection','Context management','Model switching'],
+        tools: [
+          { id: 'ac-t1', name: '@anthropic-ai/sdk', type: 'llm', description: 'Anthropic official Node SDK', status: 'enabled', callCount: 32041 },
+          { id: 'ac-t2', name: 'Stream Handler', type: 'function', description: 'Server-sent event stream processing', status: 'enabled', callCount: 32041 },
+        ],
+      },
+      {
+        id: 'hope-livekit-client', parentId: 'hope', name: 'LiveKitClient', role: 'WebRTC Voice & Video Layer',
+        description: 'LiveKit WebRTC integration for real-time voice, video, and data channels. Powers voice interaction with HOPE and multiplayer session presence.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['WebRTC audio','Video streams','Data channels','Room management','Participant presence'],
+        tools: [
+          { id: 'lk-t1', name: 'livekit-client', type: 'api', description: 'LiveKit JS client SDK', status: 'enabled', callCount: 8901 },
+          { id: 'lk-t2', name: '@livekit/components-react', type: 'api', description: 'LiveKit React UI components', status: 'enabled', callCount: 4201 },
+        ],
+      },
+      {
+        id: 'hope-posthog-analytics', parentId: 'hope', name: 'PostHogAnalytics', role: 'Behavioral Analytics Tracker',
+        description: 'PostHog integration for capturing user behavior, session replays, feature flag evaluations, and funnel analysis across the HDV frontend.',
+        status: 'active', memoryType: 'none',
+        capabilities: ['Event capture','Session replay','Feature flags','Funnel analysis','Cohort tracking'],
+        tools: [
+          { id: 'ph-t1', name: 'posthog-js', type: 'api', description: 'PostHog browser analytics SDK', status: 'enabled', callCount: 44021 },
+        ],
+      },
+      {
+        id: 'hope-matrix-client', parentId: 'hope', name: 'MatrixClient', role: 'Decentralized Messaging Layer',
+        description: 'Matrix protocol integration (matrix-js-sdk) for decentralized, persistent messaging across all HDV sessions and users.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['Room management','E2E encryption','Event sync','User presence','Message history'],
+        tools: [
+          { id: 'mx-t1', name: 'matrix-js-sdk', type: 'api', description: 'Matrix JS SDK v41', status: 'enabled', callCount: 12041 },
+        ],
+      },
+      {
+        id: 'hope-nakama-client', parentId: 'hope', name: 'NakamaClient', role: 'Game Server & Social Layer',
+        description: 'Nakama game server client (@heroiclabs/nakama-js) for matchmaking, leaderboards, real-time multiplayer, and social graph features.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Matchmaking','Leaderboards','Real-time multiplayer','Social graph','Wallet & inventory'],
+        tools: [
+          { id: 'nk-t1', name: '@heroiclabs/nakama-js', type: 'api', description: 'Nakama JS client SDK v2.8', status: 'enabled', callCount: 7802 },
+        ],
+      },
+      {
+        id: 'hope-monaco-editor', parentId: 'hope', name: 'MonacoEditor', role: 'In-App Code Editor',
+        description: 'Monaco Editor integration for live code editing, syntax highlighting, and AI-assisted completions inside the HDV UI.',
+        status: 'active', memoryType: 'none',
+        capabilities: ['Syntax highlighting','Code completion','Multi-language','Diff view','Theme support'],
+        tools: [
+          { id: 'me-t1', name: '@monaco-editor/react', type: 'api', description: 'Monaco React integration', status: 'enabled', callCount: 3201 },
+          { id: 'me-t2', name: 'monaco-editor', type: 'api', description: 'Monaco core editor bundle', status: 'enabled', callCount: 3201 },
+        ],
+      },
+      {
+        id: 'hope-companion-memory', parentId: 'hope', name: 'CompanionMemory', role: 'Companion Persistent Memory',
+        description: 'Stores and retrieves companion memory fragments, conversation history, and user preferences across sessions from hdv_foundation companion layer.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['Memory persistence','Fragment retrieval','Preference tracking','Cross-session continuity','Memory pruning'],
+        tools: [
+          { id: 'cm-t1', name: 'Memory Store', type: 'memory', description: 'Prisma-backed companion memory', status: 'enabled', callCount: 14210 },
+          { id: 'cm-t2', name: 'IndexedDB Cache', type: 'memory', description: 'idb local cache for offline access', status: 'enabled', callCount: 8901 },
+        ],
+      },
+      {
+        id: 'hope-portrait-engine', parentId: 'hope', name: 'PortraitEngine', role: 'AI Companion Portrait Renderer',
+        description: 'Renders dynamic AI companion portraits using image providers (Google AI Studio / Colab tunnel). Updates portraits based on companion emotional state and scene context.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Portrait generation','Emotion expression','Scene-aware updates','Provider routing','Image caching'],
+        tools: [
+          { id: 'pe-t1', name: 'Image Provider Factory', type: 'api', description: 'Multi-provider image generation router', status: 'enabled', callCount: 2041 },
+          { id: 'pe-t2', name: 'Portrait Cache', type: 'memory', description: 'LRU portrait image cache', status: 'enabled', callCount: 8904 },
         ],
       },
     ],
@@ -274,6 +427,84 @@ export const AGENTS: AgentDef[] = [
           { id: 'ra-t2', name: 'Usage Reporter', type: 'io', description: 'Generates usage reports and alerts', status: 'enabled', callCount: 430 },
         ],
       },
+      {
+        id: 'apex-mistral-nodes', parentId: 'apex', name: 'MistralNodes', role: 'Mistral Inference Cluster',
+        description: 'Mistral-apex-nodes integration: self-hosted Mistral 7B inference cluster for fast, private routing decisions and structured JSON extraction without external API calls.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Mistral 7B inference','JSON mode','Structured extraction','Offline routing','Batch inference'],
+        tools: [
+          { id: 'mn-t1', name: 'mistral_inference', type: 'llm', description: 'Mistral Python inference engine', status: 'enabled', callCount: 12041 },
+          { id: 'mn-t2', name: 'mistral_common', type: 'function', description: 'Mistral tokenizer and prompt format', status: 'enabled', callCount: 12041 },
+        ],
+      },
+      {
+        id: 'apex-mcp-server', parentId: 'apex', name: 'MCPServer', role: 'Model Context Protocol Hub',
+        description: 'MCP server implementation (@modelcontextprotocol/sdk) exposing HDV tools and resources to any MCP-compatible client or Claude integration.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Tool exposure','Resource serving','Prompt templates','MCP protocol','Claude integration'],
+        tools: [
+          { id: 'mcp-t1', name: '@modelcontextprotocol/sdk', type: 'api', description: 'MCP TypeScript SDK', status: 'enabled', callCount: 4201 },
+        ],
+      },
+      {
+        id: 'apex-kafka-queue', parentId: 'apex', name: 'KafkaQueue', role: 'Distributed Task Queue',
+        description: 'Kafka-backed task queue (kafkajs) for reliable, ordered task delivery across APEX workers. Supports in-memory stub mode for offline-first development.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Topic publishing','Consumer groups','Offset management','Dead-letter queue','In-memory stub'],
+        tools: [
+          { id: 'kq-t1', name: 'kafkajs', type: 'api', description: 'Kafka JS client', status: 'enabled', callCount: 8901 },
+          { id: 'kq-t2', name: 'InMemoryKafkaStub', type: 'function', description: 'Offline-first Kafka stub for dev', status: 'enabled', callCount: 22104 },
+        ],
+      },
+      {
+        id: 'apex-model-router', parentId: 'apex', name: 'ModelRouter', role: 'LLM Tenancy & Model Selector',
+        description: 'Routes LLM requests to the correct model based on tenant tier, BYOK config, and model catalog from hdv_foundation. Supports OpenAI, Groq, Together AI, and local models.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Tenant-aware routing','Model selection','BYOK passthrough','Cost optimization','Fallback chains'],
+        tools: [
+          { id: 'mr-t1', name: 'Model Catalog', type: 'function', description: 'config/models.json registry', status: 'enabled', callCount: 14210 },
+          { id: 'mr-t2', name: 'Tenancy Router', type: 'function', description: 'Tenant subscription tier resolver', status: 'enabled', callCount: 14210 },
+        ],
+      },
+      {
+        id: 'apex-node-matrix', parentId: 'apex', name: 'NodeMatrix', role: '20,480-Node Topology Manager',
+        description: 'Manages the 20,480-node agent topology from hdv-orchestrator. Tracks node leases, specializations, persona assignments, and math engine pipelines.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['Node leasing','Specialization','Pipeline management','Persona assignment','Math engine routing'],
+        tools: [
+          { id: 'nm-t1', name: 'Node Lease Manager', type: 'function', description: 'Distributed node lease and lifecycle', status: 'enabled', callCount: 20480 },
+          { id: 'nm-t2', name: 'Matrix Controller', type: 'function', description: 'Topology coordination layer', status: 'enabled', callCount: 4820 },
+        ],
+      },
+      {
+        id: 'apex-prisma-client', parentId: 'apex', name: 'PrismaClient', role: 'ORM Database Layer',
+        description: 'Prisma ORM client for all structured database operations. Connects to PostgreSQL for tenant records, billing, market listings, and persistent agent state.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['CRUD operations','Migrations','Schema validation','Transaction support','Connection pooling'],
+        tools: [
+          { id: 'prc-t1', name: '@prisma/client', type: 'api', description: 'Prisma generated type-safe client', status: 'enabled', callCount: 33201 },
+          { id: 'prc-t2', name: 'PostgreSQL', type: 'memory', description: 'Postgres database backend', status: 'enabled', callCount: 33201 },
+        ],
+      },
+      {
+        id: 'apex-fastify-gateway', parentId: 'apex', name: 'FastifyGateway', role: 'HTTP API Gateway',
+        description: 'Fastify-based HTTP gateway (hdv_foundation gateway/) handling /v1 routes for all public and internal API calls with JWT auth and rate limiting.',
+        status: 'active', memoryType: 'none',
+        capabilities: ['HTTP routing','JWT middleware','Rate limiting','CORS','Request validation'],
+        tools: [
+          { id: 'fg2-t1', name: 'Fastify', type: 'api', description: 'Fastify v5 HTTP framework', status: 'enabled', callCount: 44021 },
+          { id: 'fg2-t2', name: 'Express', type: 'api', description: 'Express v4 (hdv-orchestrator)', status: 'enabled', callCount: 8901 },
+        ],
+      },
+      {
+        id: 'apex-byok-router', parentId: 'apex', name: 'BYOKRouter', role: 'Bring-Your-Own-Key Passthrough',
+        description: 'Routes LLM calls for BYOK tenants directly to their own API endpoints and keys without HDV platform keys ever being involved.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Key passthrough','Endpoint forwarding','BYOK validation','Usage attribution','Isolation guarantee'],
+        tools: [
+          { id: 'bk-t1', name: 'BYOK Proxy', type: 'api', description: 'Transparent key injection proxy', status: 'enabled', callCount: 890 },
+        ],
+      },
     ],
   },
 
@@ -361,8 +592,82 @@ export const AGENTS: AgentDef[] = [
         status: 'idle', memoryType: 'short',
         capabilities: ['Image generation','Audio description','Code generation','Asset caching','Format normalization'],
         tools: [
-          { id: 'dast1', name: 'Flux API', type: 'api', description: 'Image generation via Flux', status: 'enabled', callCount: 341 },
+          { id: 'dast1', name: 'Image Factory', type: 'api', description: 'Multi-provider image generation factory', status: 'enabled', callCount: 341 },
           { id: 'dast2', name: 'Code Gen LLM', type: 'llm', description: 'Code synthesis model', status: 'enabled', callCount: 891 },
+        ],
+      },
+      {
+        id: 'dream-google-ai-studio', parentId: 'dream', name: 'GoogleAIStudio', role: 'Gemini Image Generator',
+        description: 'Google AI Studio integration (providers/google_ai_studio_image.ts) for Gemini-powered image generation. Used for companion portraits, scene images, and asset thumbnails.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Gemini image gen','Prompt-to-image','Style transfer','High-resolution output','Batch generation'],
+        tools: [
+          { id: 'gas-t1', name: 'Google AI Studio API', type: 'llm', description: 'Gemini image generation endpoint', status: 'enabled', callCount: 891 },
+        ],
+      },
+      {
+        id: 'dream-colab-image', parentId: 'dream', name: 'ColabImageTunnel', role: 'Google Colab Image Pipeline',
+        description: 'Google Colab tunnel provider (providers/colab_tunnel_image.ts) for GPU-accelerated image generation. Routes diffusion model requests through Colab notebook tunnels.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Diffusion models','GPU acceleration','Colab tunnel','Stable Diffusion','Image upscaling'],
+        tools: [
+          { id: 'cit-t1', name: 'Colab Tunnel HTTP', type: 'api', description: 'Colab notebook HTTP tunnel client', status: 'enabled', callCount: 512 },
+        ],
+      },
+      {
+        id: 'dream-colab-video', parentId: 'dream', name: 'ColabVideoTunnel', role: 'Google Colab Video Pipeline',
+        description: 'Google Colab video tunnel provider (providers/colab_tunnel_video.ts) for AI video generation and scene animation via notebook GPU tunnels.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Video generation','Scene animation','Text-to-video','Frame interpolation','Colab GPU'],
+        tools: [
+          { id: 'cvt-t1', name: 'Colab Video API', type: 'api', description: 'Colab notebook video generation tunnel', status: 'enabled', callCount: 201 },
+        ],
+      },
+      {
+        id: 'dream-kokoro-tts', parentId: 'dream', name: 'KokoroTTS', role: 'Text-to-Speech Voice Engine',
+        description: 'Kokoro TTS provider (providers/kokoro_tunnel_tts.ts) for high-quality, low-latency voice synthesis. Delivers companion voice lines and narration via Colab tunnel.',
+        status: 'idle', memoryType: 'none',
+        capabilities: ['Voice synthesis','Multiple voices','Emotion inflection','Streaming audio','SSML support'],
+        tools: [
+          { id: 'kt-t1', name: 'Kokoro TTS API', type: 'api', description: 'Kokoro TTS via Colab tunnel', status: 'enabled', callCount: 1402 },
+        ],
+      },
+      {
+        id: 'dream-ollama-local', parentId: 'dream', name: 'OllamaLocal', role: 'Local LLM Runner',
+        description: 'Ollama local model server for offline-first LLM inference. Runs TinyLlama, Phi-2, and Mistral 7B locally without any cloud dependency.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Offline inference','Model management','OpenAI-compatible API','Low latency','Privacy-first'],
+        tools: [
+          { id: 'ol-t1', name: 'Ollama API', type: 'llm', description: 'Ollama local model serving endpoint', status: 'enabled', callCount: 4201 },
+          { id: 'ol-t2', name: 'TinyLlama 1.1B', type: 'llm', description: 'Lightweight local model', status: 'enabled', callCount: 2100 },
+        ],
+      },
+      {
+        id: 'dream-vllm-server', parentId: 'dream', name: 'vLLMServer', role: 'High-Throughput Inference Engine',
+        description: 'vLLM server for high-throughput LLM inference with PagedAttention. Hosts Llama 3 and Mistral on Hostinger for the HDV platform subscription tier.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['PagedAttention','Continuous batching','OpenAI-compatible','Llama 3 serving','Multi-GPU'],
+        tools: [
+          { id: 'vl-t2', name: 'vLLM API', type: 'llm', description: 'vLLM OpenAI-compatible endpoint', status: 'enabled', callCount: 3301 },
+          { id: 'vl-t3', name: 'Llama 3 70B', type: 'llm', description: 'Llama 3 70B Instruct on Hostinger', status: 'enabled', callCount: 1201 },
+        ],
+      },
+      {
+        id: 'dream-phaser-engine', parentId: 'dream', name: 'PhaserEngine', role: 'Game Physics & Scene Engine',
+        description: 'Phaser 4 game engine integration for 2D game logic, physics simulation, sprite rendering, and interactive scene management within DREAM sessions.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['2D physics','Sprite rendering','Input handling','Audio management','Scene transitions'],
+        tools: [
+          { id: 'phe-t1', name: 'phaser v4', type: 'api', description: 'Phaser 4.1 game framework', status: 'enabled', callCount: 891 },
+        ],
+      },
+      {
+        id: 'dream-threejs-3d', parentId: 'dream', name: 'ThreeJS3D', role: '3D Scene & Entity Renderer',
+        description: 'Three.js 3D rendering layer for world visualization, entity positioning, camera management, and real-time 3D scene updates within DREAM instances.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['3D rendering','Camera control','Lighting','Entity positioning','WebGL shaders'],
+        tools: [
+          { id: 'tj-t1', name: 'three v0.184', type: 'api', description: 'Three.js 3D rendering library', status: 'enabled', callCount: 401 },
         ],
       },
     ],
@@ -455,6 +760,82 @@ export const AGENTS: AgentDef[] = [
         capabilities: ['Action recording','Authorization logging','Outcome tracking','KNOLL reporting','Compliance export'],
         tools: [
           { id: 'vl-t1', name: 'Audit Event Emitter', type: 'security', description: 'Structured audit event emission', status: 'enabled', callCount: 44210 },
+        ],
+      },
+      {
+        id: 'vision-stripe-connect', parentId: 'vision', name: 'StripeConnect', role: 'Marketplace Payment Platform',
+        description: 'Stripe Connect integration for the HDV creator marketplace. Manages connected accounts, platform fees, and marketplace payouts for creators.',
+        status: 'idle', memoryType: 'long',
+        capabilities: ['Connected accounts','Platform fees','Express payouts','Account onboarding','Transfer splits'],
+        tools: [
+          { id: 'sc2-t1', name: 'Stripe Connect API', type: 'payment', description: 'Stripe Connect for marketplace', status: 'enabled', callCount: 201 },
+          { id: 'sc2-t2', name: 'Stripe Webhook', type: 'webhook', description: 'Stripe webhook event processor', status: 'enabled', callCount: 892 },
+        ],
+      },
+      {
+        id: 'vision-stripe-identity', parentId: 'vision', name: 'StripeIdentity', role: 'Creator Identity Verification',
+        description: 'Stripe Identity integration (creator/payout_stripe_live.ts) for KYC verification of creator accounts before enabling real payouts.',
+        status: 'idle', memoryType: 'long',
+        capabilities: ['KYC verification','ID document check','Liveness detection','Verification session','Compliance record'],
+        tools: [
+          { id: 'si-t1', name: 'Stripe Identity API', type: 'api', description: 'Stripe Identity verification session', status: 'enabled', callCount: 89 },
+        ],
+      },
+      {
+        id: 'vision-creator-market', parentId: 'vision', name: 'CreatorMarket', role: 'Creator Payout & Marketplace',
+        description: 'Full creator marketplace from hdv_foundation: listing management, payout eligibility, market store operations, and creator webhook dispatching.',
+        status: 'idle', memoryType: 'long',
+        capabilities: ['Creator listings','Payout eligibility','Market store','Creator webhooks','Revenue tracking'],
+        tools: [
+          { id: 'crm-t1', name: 'Payout Factory', type: 'payment', description: 'Creator payout provider factory', status: 'enabled', callCount: 134 },
+          { id: 'crm-t2', name: 'Market Store', type: 'memory', description: 'Prisma-backed market listings', status: 'enabled', callCount: 2201 },
+        ],
+      },
+      {
+        id: 'vision-livekit-server', parentId: 'vision', name: 'LiveKitServer', role: 'WebRTC Room Controller',
+        description: 'Server-side LiveKit room management: creating rooms, issuing access tokens, managing participant permissions, and recording sessions.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Room creation','Token issuance','Participant control','Recording','Egress management'],
+        tools: [
+          { id: 'lks-t1', name: 'LiveKit Server API', type: 'api', description: 'LiveKit server-side room management', status: 'enabled', callCount: 1204 },
+        ],
+      },
+      {
+        id: 'vision-nakama-server', parentId: 'vision', name: 'NakamaServer', role: 'Game Server Controller',
+        description: 'Nakama game server management: match creation, runtime hook execution, wallet transactions, and leaderboard updates on the Nakama backend.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Match creation','Runtime hooks','Wallet ops','Leaderboards','Storage write'],
+        tools: [
+          { id: 'nks-t1', name: 'Nakama Server API', type: 'api', description: 'Nakama server-side admin API', status: 'enabled', callCount: 3201 },
+        ],
+      },
+      {
+        id: 'vision-billing-meter', parentId: 'vision', name: 'BillingMeter', role: 'Usage Metering & Allowance',
+        description: 'Billing meter from hdv_foundation: tracks APEX parameter usage per tenant, enforces plan allowances, and triggers Stripe checkout for overages.',
+        status: 'idle', memoryType: 'long',
+        capabilities: ['Usage metering','Plan allowances','Overage detection','Checkout trigger','Cost attribution'],
+        tools: [
+          { id: 'bm-t1', name: 'Billing Meter', type: 'payment', description: 'Parameter usage metering engine', status: 'enabled', callCount: 28401 },
+          { id: 'bm-t2', name: 'Pricing Config', type: 'function', description: 'config/pricing.json tier table', status: 'enabled', callCount: 14210 },
+        ],
+      },
+      {
+        id: 'vision-sea-scyte-api', parentId: 'vision', name: 'SeaScyteAPI', role: 'Sea-Scyte Commerce API',
+        description: 'Sea-Scyte Fastify API backend (apps/api): JWT-authenticated REST endpoints for the Sea-Scyte commerce platform with PostgreSQL and Stripe.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['REST API','JWT auth','PostgreSQL','Stripe integration','CORS handling'],
+        tools: [
+          { id: 'ssa-t1', name: 'Fastify (Sea-Scyte)', type: 'api', description: 'Sea-Scyte Fastify v5 API', status: 'enabled', callCount: 8901 },
+          { id: 'ssa-t2', name: 'pg (PostgreSQL)', type: 'memory', description: 'Direct PostgreSQL client for Sea-Scyte', status: 'enabled', callCount: 14210 },
+        ],
+      },
+      {
+        id: 'vision-resource-monitor', parentId: 'vision', name: 'ResourceMonitor', role: 'Execution Resource Tracker',
+        description: 'Vision resource monitor (vision/resource_monitor.ts) tracks CPU, memory, and I/O usage during task execution. Enforces sandbox resource limits.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['CPU tracking','Memory limits','I/O monitoring','Quota enforcement','Limit alerts'],
+        tools: [
+          { id: 'rm-t1', name: 'Resource Monitor', type: 'function', description: 'Process resource usage tracker', status: 'enabled', callCount: 4820 },
         ],
       },
     ],

@@ -11,54 +11,109 @@ const AGENT_POS: Record<string, { x: number; y: number }> = {
   vision: { x: 2050, y: 480 },
 }
 
+// KNOLL children: 15 nodes in 3 rows of 5, centered at x:750
+// Row X values: 360, 555, 750, 945, 1140
+// Row Y values: 280, 460, 640
 const KNOLL_CHILD_POS: Record<string, { x: number; y: number }> = {
-  'knoll-vault-keeper':        { x: 90,   y: 260 },
-  'knoll-auth-guard':          { x: 285,  y: 260 },
-  'knoll-session-validator':   { x: 480,  y: 260 },
-  'knoll-permission-matrix':   { x: 675,  y: 260 },
-  'knoll-threat-detector':     { x: 870,  y: 260 },
-  'knoll-audit-trail':         { x: 1065, y: 260 },
-  'knoll-access-log':          { x: 1260, y: 260 },
+  'knoll-auth-guard':          { x: 360,  y: 280 },
+  'knoll-session-validator':   { x: 555,  y: 280 },
+  'knoll-permission-matrix':   { x: 750,  y: 280 },
+  'knoll-threat-detector':     { x: 945,  y: 280 },
+  'knoll-audit-trail':         { x: 1140, y: 280 },
+  'knoll-access-log':          { x: 360,  y: 460 },
+  'knoll-vault-keeper':        { x: 555,  y: 460 },
+  'knoll-supabase-rls':        { x: 750,  y: 460 },
+  'knoll-freeze-gate':         { x: 945,  y: 460 },
+  'knoll-redis-cache':         { x: 1140, y: 460 },
+  'knoll-legal-gates':         { x: 360,  y: 640 },
+  'knoll-tenancy-manager':     { x: 555,  y: 640 },
+  'knoll-gvisor-sandbox':      { x: 750,  y: 640 },
+  'knoll-observability':       { x: 945,  y: 640 },
+  'knoll-prisma-guard':        { x: 1140, y: 640 },
 }
 
+// HOPE children: 15 nodes in 3 rows of 5, centered at x:100
+// Row X values: -490, -295, -100, 95, 290  (actually: -290, -95, 100, 295, 490)
+// Row Y values: 730, 900, 1070
 const HOPE_CHILD_POS: Record<string, { x: number; y: number }> = {
-  'hope-intent-parser':        { x: -130, y: 730 },
-  'hope-persona-manager':      { x: 70,   y: 730 },
-  'hope-ui-renderer':          { x: 270,  y: 730 },
-  'hope-conversation-buffer':  { x: 470,  y: 730 },
-  'hope-context-weaver':       { x: -130, y: 880 },
-  'hope-emotion-engine':       { x: 70,   y: 880 },
-  'hope-narrative-voice':      { x: 270,  y: 880 },
+  'hope-intent-parser':        { x: -290, y: 730 },
+  'hope-persona-manager':      { x: -95,  y: 730 },
+  'hope-ui-renderer':          { x: 100,  y: 730 },
+  'hope-conversation-buffer':  { x: 295,  y: 730 },
+  'hope-context-weaver':       { x: 490,  y: 730 },
+  'hope-emotion-engine':       { x: -290, y: 900 },
+  'hope-narrative-voice':      { x: -95,  y: 900 },
+  'hope-anthropic-client':     { x: 100,  y: 900 },
+  'hope-livekit-client':       { x: 295,  y: 900 },
+  'hope-posthog-analytics':    { x: 490,  y: 900 },
+  'hope-matrix-client':        { x: -290, y: 1070 },
+  'hope-nakama-client':        { x: -95,  y: 1070 },
+  'hope-monaco-editor':        { x: 100,  y: 1070 },
+  'hope-companion-memory':     { x: 295,  y: 1070 },
+  'hope-portrait-engine':      { x: 490,  y: 1070 },
 }
 
+// APEX children: 15 nodes in 3 rows of 5, centered at x:1400
+// Row X values: 1010, 1205, 1400, 1595, 1790
+// Row Y values: 730, 900, 1070
 const APEX_CHILD_POS: Record<string, { x: number; y: number }> = {
-  'apex-task-router':          { x: 1250, y: 730 },
-  'apex-agent-spawner':        { x: 1450, y: 730 },
-  'apex-tool-registry':        { x: 1650, y: 730 },
-  'apex-memory-core':          { x: 1850, y: 730 },
-  'apex-security-gate':        { x: 1250, y: 880 },
-  'apex-api-bridge':           { x: 1450, y: 880 },
-  'apex-resource-allocator':   { x: 1650, y: 880 },
+  'apex-task-router':          { x: 1010, y: 730 },
+  'apex-agent-spawner':        { x: 1205, y: 730 },
+  'apex-tool-registry':        { x: 1400, y: 730 },
+  'apex-memory-core':          { x: 1595, y: 730 },
+  'apex-security-gate':        { x: 1790, y: 730 },
+  'apex-api-bridge':           { x: 1010, y: 900 },
+  'apex-resource-allocator':   { x: 1205, y: 900 },
+  'apex-mistral-nodes':        { x: 1400, y: 900 },
+  'apex-mcp-server':           { x: 1595, y: 900 },
+  'apex-kafka-queue':          { x: 1790, y: 900 },
+  'apex-model-router':         { x: 1010, y: 1070 },
+  'apex-node-matrix':          { x: 1205, y: 1070 },
+  'apex-prisma-client':        { x: 1400, y: 1070 },
+  'apex-fastify-gateway':      { x: 1595, y: 1070 },
+  'apex-byok-router':          { x: 1790, y: 1070 },
 }
 
+// DREAM children: 15 nodes in 3 rows of 5, centered at x:-650
+// Row X values: -1040, -845, -650, -455, -260
+// Row Y values: 730, 900, 1070
 const DREAM_CHILD_POS: Record<string, { x: number; y: number }> = {
-  'dream-world-builder':       { x: -1050, y: 730 },
-  'dream-scene-composer':      { x: -850,  y: 730 },
+  'dream-world-builder':       { x: -1040, y: 730 },
+  'dream-scene-composer':      { x: -845,  y: 730 },
   'dream-entity-generator':    { x: -650,  y: 730 },
-  'dream-physics-simulator':   { x: -450,  y: 730 },
-  'dream-chaos-seed':          { x: -1050, y: 880 },
-  'dream-narrative-forge':     { x: -850,  y: 880 },
-  'dream-asset-synthesizer':   { x: -650,  y: 880 },
+  'dream-physics-simulator':   { x: -455,  y: 730 },
+  'dream-chaos-seed':          { x: -260,  y: 730 },
+  'dream-narrative-forge':     { x: -1040, y: 900 },
+  'dream-asset-synthesizer':   { x: -845,  y: 900 },
+  'dream-google-ai-studio':    { x: -650,  y: 900 },
+  'dream-colab-image':         { x: -455,  y: 900 },
+  'dream-colab-video':         { x: -260,  y: 900 },
+  'dream-kokoro-tts':          { x: -1040, y: 1070 },
+  'dream-ollama-local':        { x: -845,  y: 1070 },
+  'dream-vllm-server':         { x: -650,  y: 1070 },
+  'dream-phaser-engine':       { x: -455,  y: 1070 },
+  'dream-threejs-3d':          { x: -260,  y: 1070 },
 }
 
+// VISION children: 15 nodes in 3 rows of 5, centered at x:2050
+// Row X values: 1660, 1855, 2050, 2245, 2440
+// Row Y values: 730, 900, 1070
 const VISION_CHILD_POS: Record<string, { x: number; y: number }> = {
-  'vision-task-executor':      { x: 1950, y: 730 },
-  'vision-payment-processor':  { x: 2150, y: 730 },
-  'vision-automation-runner':  { x: 2350, y: 730 },
-  'vision-webhook-manager':    { x: 2550, y: 730 },
-  'vision-scheduler-daemon':   { x: 1950, y: 880 },
-  'vision-output-streamer':    { x: 2150, y: 880 },
-  'vision-audit-logger':       { x: 2350, y: 880 },
+  'vision-task-executor':      { x: 1660, y: 730 },
+  'vision-payment-processor':  { x: 1855, y: 730 },
+  'vision-automation-runner':  { x: 2050, y: 730 },
+  'vision-webhook-manager':    { x: 2245, y: 730 },
+  'vision-scheduler-daemon':   { x: 2440, y: 730 },
+  'vision-output-streamer':    { x: 1660, y: 900 },
+  'vision-audit-logger':       { x: 1855, y: 900 },
+  'vision-stripe-connect':     { x: 2050, y: 900 },
+  'vision-stripe-identity':    { x: 2245, y: 900 },
+  'vision-creator-market':     { x: 2440, y: 900 },
+  'vision-livekit-server':     { x: 1660, y: 1070 },
+  'vision-nakama-server':      { x: 1855, y: 1070 },
+  'vision-billing-meter':      { x: 2050, y: 1070 },
+  'vision-sea-scyte-api':      { x: 2245, y: 1070 },
+  'vision-resource-monitor':   { x: 2440, y: 1070 },
 }
 
 const ALL_CHILD_POS = {
