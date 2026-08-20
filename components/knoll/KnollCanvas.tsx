@@ -44,27 +44,11 @@ export function KnollCanvas() {
         fitViewOptions={{ padding: 0.15 }}
         minZoom={0.05}
         maxZoom={2}
-        defaultEdgeOptions={{
-          style: { strokeWidth: 1.5 },
-          animated: false,
-        }}
+        defaultEdgeOptions={{ style: { strokeWidth: 1.5 }, animated: false }}
         proOptions={{ hideAttribution: true }}
       >
-        <Background
-          variant={BackgroundVariant.Dots}
-          color="#1a1a2e"
-          gap={28}
-          size={1}
-        />
-        <Controls
-          style={{
-            button: {
-              backgroundColor: 'rgba(0,0,0,0.8)',
-              borderColor: '#374151',
-              color: '#9ca3af',
-            },
-          }}
-        />
+        <Background variant={BackgroundVariant.Dots} color="#1a1a2e" gap={28} size={1} />
+        <Controls />
         <MiniMap
           style={{ background: '#0a0a10', border: '1px solid #1f2937' }}
           nodeColor={(n) => {

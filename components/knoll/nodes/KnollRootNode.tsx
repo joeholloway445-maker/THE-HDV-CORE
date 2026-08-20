@@ -19,7 +19,7 @@ export function KnollRootNode({ data, id }: NodeProps<KnollRootNodeType>) {
         Security Root
       </div>
       <div className="text-3xl font-black text-white tracking-tight">{data.label as string}</div>
-      <div className="text-xs text-gray-500 mt-1 max-w-[180px] mx-auto">{data.description as string}</div>
+      <div className="text-xs text-gray-500 mt-1 max-w-[180px] mx-auto italic">{data.tagline as string}</div>
       <div className="mt-3 flex items-center justify-center gap-2">
         <div className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: color }} />
         <span className="text-[10px] font-mono uppercase tracking-wider" style={{ color }}>

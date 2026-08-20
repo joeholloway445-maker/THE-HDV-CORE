@@ -1,11 +1,11 @@
 'use client'
 import { useKnollStore } from '@/lib/knoll/store'
 
-const severityColor: Record<string, string> = {
-  info: '#60a5fa',
-  warning: '#fbbf24',
-  error: '#f87171',
+const statusColor: Record<string, string> = {
   success: '#4ade80',
+  error: '#f87171',
+  pending: '#60a5fa',
+  blocked: '#fbbf24',
 }
 
 export function ActivityFeed() {
@@ -21,25 +21,21 @@ export function ActivityFeed() {
       </div>
       <div className="flex-1 overflow-y-auto">
         {recent.map(entry => (
-          <div
-            key={entry.id}
-            className="flex items-baseline gap-3 px-4 py-0.5 hover:bg-gray-900/30"
-          >
+          <div key={entry.id} className="flex items-baseline gap-3 px-4 py-0.5 hover:bg-gray-900/30">
             <span className="text-[10px] font-mono text-gray-700 flex-shrink-0 tabular-nums">
               {new Date(entry.timestamp).toLocaleTimeString('en-US', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
+                hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
               })}
             </span>
             <span
-              className="text-[10px] font-mono font-semibold flex-shrink-0 uppercase w-12"
-              style={{ color: severityColor[entry.severity] ?? '#9ca3af' }}
+              className="text-[10px] font-mono font-semibold flex-shrink-0 uppercase w-14 truncate"
+              style={{ color: statusColor[entry.status] ?? '#9ca3af' }}
             >
-              {entry.agentId.slice(0, 5)}
+              {entry.agentName}
             </span>
-            <span className="text-[10px] text-gray-400 leading-relaxed truncate">{entry.message}</span>
+            <span className="text-[10px] text-gray-400 leading-relaxed truncate">
+              {entry.action}{entry.target ? ` → ${entry.target}` : ''}
+            </span>
           </div>
         ))}
       </div>

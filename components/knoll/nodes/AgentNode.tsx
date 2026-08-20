@@ -17,7 +17,7 @@ export function AgentNode({ data, id }: NodeProps<AgentNodeType>) {
   const setSelectedNode = useKnollStore(s => s.setSelectedNode)
   const color = data.primaryColor as string
   const status = data.status as string
-  const agentClass = data.agentClass as string
+  const agentClass = data.class as string
   const toolCount = (data.toolCount as number) ?? 0
   const childCount = (data.childCount as number) ?? 0
 
@@ -32,8 +32,8 @@ export function AgentNode({ data, id }: NodeProps<AgentNodeType>) {
         {agentClass}
       </div>
       <div className="text-2xl font-bold text-white">{data.label as string}</div>
-      <div className="text-[11px] text-gray-400 mt-1 max-w-[170px] mx-auto line-clamp-2 leading-relaxed">
-        {data.description as string}
+      <div className="text-[11px] text-gray-400 mt-1 max-w-[170px] mx-auto line-clamp-2 leading-relaxed italic">
+        {data.tagline as string}
       </div>
       <div className="mt-3 flex items-center justify-between text-[10px] font-mono text-gray-600">
         <span>{toolCount} tools</span>

@@ -7,15 +7,9 @@ import { PERSONAS, GOALS, PLANS, DOCUMENTS, REPOS } from '@/lib/knoll/content'
 type SectionKey = 'agents' | 'goals' | 'personas' | 'plans' | 'documents' | 'repos'
 
 function SectionHeader({
-  title,
-  count,
-  open,
-  onToggle,
+  title, count, open, onToggle,
 }: {
-  title: string
-  count: number
-  open: boolean
-  onToggle: () => void
+  title: string; count: number; open: boolean; onToggle: () => void
 }) {
   return (
     <button
@@ -32,28 +26,17 @@ function SectionHeader({
 }
 
 const priorityColor: Record<string, string> = {
-  critical: '#ef4444',
-  high: '#f59e0b',
-  medium: '#06b6d4',
-  low: '#6b7280',
+  critical: '#ef4444', high: '#f59e0b', medium: '#06b6d4', low: '#6b7280',
 }
 
-const consolidationColor: Record<string, string> = {
-  active: '#22c55e',
-  consolidating: '#f59e0b',
-  archived: '#4b5563',
-  reference: '#8b5cf6',
+const repoStatusColor: Record<string, string> = {
+  active: '#22c55e', consolidating: '#f59e0b', archived: '#4b5563',
 }
 
 export function KnollSidebar() {
   const sidebarOpen = useKnollStore(s => s.sidebarOpen)
   const [open, setOpen] = useState<Record<SectionKey, boolean>>({
-    agents: true,
-    goals: true,
-    personas: false,
-    plans: false,
-    documents: false,
-    repos: false,
+    agents: true, goals: true, personas: false, plans: false, documents: false, repos: false,
   })
 
   if (!sidebarOpen) return null
@@ -68,21 +51,15 @@ export function KnollSidebar() {
 
       <div className="flex-1 overflow-y-auto">
 
-        {/* AGENTS */}
         <SectionHeader title="Agents" count={AGENTS.length} open={open.agents} onToggle={() => toggle('agents')} />
         {open.agents && (
           <div className="pb-2">
             {AGENTS.map(a => (
               <div key={a.id} className="flex items-start gap-2.5 px-4 py-2 hover:bg-gray-900/40 cursor-pointer">
-                <div
-                  className="h-2 w-2 rounded-full flex-shrink-0 mt-0.5"
-                  style={{ backgroundColor: a.primaryColor }}
-                />
+                <div className="h-2 w-2 rounded-full flex-shrink-0 mt-0.5" style={{ backgroundColor: a.primaryColor }} />
                 <div className="min-w-0">
                   <div className="text-xs font-semibold text-white">{a.name}</div>
-                  <div className="text-[10px] text-gray-600 truncate">
-                    {a.agentClass} · {a.children.length} nodes
-                  </div>
+                  <div className="text-[10px] text-gray-600 truncate">{a.class} · {a.children.length} nodes</div>
                 </div>
               </div>
             ))}
@@ -91,7 +68,6 @@ export function KnollSidebar() {
 
         <div className="border-t border-gray-900" />
 
-        {/* GOALS */}
         <SectionHeader title="Goals" count={GOALS.length} open={open.goals} onToggle={() => toggle('goals')} />
         {open.goals && (
           <div className="pb-2">
@@ -104,10 +80,7 @@ export function KnollSidebar() {
                 <div className="h-1 bg-gray-900 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${g.progress}%`,
-                      backgroundColor: priorityColor[g.priority] ?? '#06b6d4',
-                    }}
+                    style={{ width: `${g.progress}%`, backgroundColor: priorityColor[g.priority] ?? '#06b6d4' }}
                   />
                 </div>
               </div>
@@ -117,23 +90,16 @@ export function KnollSidebar() {
 
         <div className="border-t border-gray-900" />
 
-        {/* PERSONAS */}
         <SectionHeader title="Personas" count={PERSONAS.length} open={open.personas} onToggle={() => toggle('personas')} />
         {open.personas && (
           <div className="pb-2">
             {PERSONAS.map(p => (
               <div key={p.id} className="px-4 py-2 hover:bg-gray-900/40 cursor-pointer">
                 <div className="flex items-center gap-2">
-                  <div
-                    className={`h-2 w-2 rounded-full flex-shrink-0 ${
-                      p.active ? 'bg-green-500' : 'bg-gray-700'
-                    }`}
-                  />
+                  <div className={`h-2 w-2 rounded-full flex-shrink-0 ${p.active ? 'bg-green-500' : 'bg-gray-700'}`} />
                   <span className="text-xs text-white">{p.name}</span>
                 </div>
-                <div className="text-[10px] text-gray-600 mt-0.5 ml-4">
-                  {p.agent} · {p.voiceStyle}
-                </div>
+                <div className="text-[10px] text-gray-600 mt-0.5 ml-4">{p.agentId} · {p.voiceStyle}</div>
               </div>
             ))}
           </div>
@@ -141,16 +107,13 @@ export function KnollSidebar() {
 
         <div className="border-t border-gray-900" />
 
-        {/* PLANS */}
         <SectionHeader title="Plans" count={PLANS.length} open={open.plans} onToggle={() => toggle('plans')} />
         {open.plans && (
           <div className="pb-2">
             {PLANS.map(p => (
               <div key={p.id} className="px-4 py-2 hover:bg-gray-900/40 cursor-pointer">
                 <div className="text-xs text-white">{p.title}</div>
-                <div className="text-[10px] text-gray-600 mt-0.5">
-                  {p.steps.length} steps · {p.status}
-                </div>
+                <div className="text-[10px] text-gray-600 mt-0.5">{p.steps.length} steps · {p.status}</div>
               </div>
             ))}
           </div>
@@ -158,16 +121,13 @@ export function KnollSidebar() {
 
         <div className="border-t border-gray-900" />
 
-        {/* DOCUMENTS */}
         <SectionHeader title="Documents" count={DOCUMENTS.length} open={open.documents} onToggle={() => toggle('documents')} />
         {open.documents && (
           <div className="pb-2">
             {DOCUMENTS.map(d => (
               <div key={d.id} className="px-4 py-2 hover:bg-gray-900/40 cursor-pointer">
                 <div className="text-xs text-white line-clamp-1">{d.title}</div>
-                <div className="text-[10px] text-gray-600 mt-0.5">
-                  {d.type} · {d.owner}
-                </div>
+                <div className="text-[10px] text-gray-600 mt-0.5">{d.type} · {d.updatedAt}</div>
               </div>
             ))}
           </div>
@@ -175,7 +135,6 @@ export function KnollSidebar() {
 
         <div className="border-t border-gray-900" />
 
-        {/* REPOS */}
         <SectionHeader title="Repos" count={REPOS.length} open={open.repos} onToggle={() => toggle('repos')} />
         {open.repos && (
           <div className="pb-2">
@@ -184,11 +143,11 @@ export function KnollSidebar() {
                 <div className="flex items-center gap-1.5">
                   <div
                     className="h-1.5 w-1.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: consolidationColor[r.consolidationStatus] ?? '#6b7280' }}
+                    style={{ backgroundColor: repoStatusColor[r.status] ?? '#6b7280' }}
                   />
                   <span className="text-xs text-white truncate">{r.name}</span>
                 </div>
-                <div className="text-[10px] text-gray-600 mt-0.5 ml-3">{r.consolidationStatus}</div>
+                <div className="text-[10px] text-gray-600 mt-0.5 ml-3">{r.status}</div>
               </div>
             ))}
           </div>
