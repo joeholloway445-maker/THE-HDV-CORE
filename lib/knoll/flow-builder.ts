@@ -11,9 +11,10 @@ const AGENT_POS: Record<string, { x: number; y: number }> = {
   vision: { x: 2050, y: 480 },
 }
 
-// KNOLL children: 15 nodes in 3 rows of 5, centered at x:750
-// Row X values: 360, 555, 750, 945, 1140
-// Row Y values: 280, 460, 640
+// KNOLL children: 17 nodes in 4 rows (5+5+5+2), centered at x:750
+// Row X values (195px spacing): 360, 555, 750, 945, 1140
+// Row 4 (2 nodes, centered): 653, 848
+// Row Y values: 280, 460, 640, 820
 const KNOLL_CHILD_POS: Record<string, { x: number; y: number }> = {
   'knoll-auth-guard':          { x: 360,  y: 280 },
   'knoll-session-validator':   { x: 555,  y: 280 },
@@ -30,11 +31,14 @@ const KNOLL_CHILD_POS: Record<string, { x: number; y: number }> = {
   'knoll-gvisor-sandbox':      { x: 750,  y: 640 },
   'knoll-observability':       { x: 945,  y: 640 },
   'knoll-prisma-guard':        { x: 1140, y: 640 },
+  'knoll-cloudflare-waf':      { x: 653,  y: 820 },
+  'knoll-sentry-monitor':      { x: 848,  y: 820 },
 }
 
-// HOPE children: 15 nodes in 3 rows of 5, centered at x:100
-// Row X values: -490, -295, -100, 95, 290  (actually: -290, -95, 100, 295, 490)
-// Row Y values: 730, 900, 1070
+// HOPE children: 19 nodes in 4 rows (5+5+5+4), centered at x:100
+// Row X values (195px spacing): -290, -95, 100, 295, 490
+// Row 4 (4 nodes, centered): -193, 3, 198, 393
+// Row Y values: 730, 900, 1070, 1240
 const HOPE_CHILD_POS: Record<string, { x: number; y: number }> = {
   'hope-intent-parser':        { x: -290, y: 730 },
   'hope-persona-manager':      { x: -95,  y: 730 },
@@ -51,11 +55,16 @@ const HOPE_CHILD_POS: Record<string, { x: number; y: number }> = {
   'hope-monaco-editor':        { x: 100,  y: 1070 },
   'hope-companion-memory':     { x: 295,  y: 1070 },
   'hope-portrait-engine':      { x: 490,  y: 1070 },
+  'hope-seo-engine':           { x: -193, y: 1240 },
+  'hope-brand-builder':        { x: 3,    y: 1240 },
+  'hope-market-research':      { x: 198,  y: 1240 },
+  'hope-landing-page-gen':     { x: 393,  y: 1240 },
 }
 
-// APEX children: 15 nodes in 3 rows of 5, centered at x:1400
-// Row X values: 1010, 1205, 1400, 1595, 1790
-// Row Y values: 730, 900, 1070
+// APEX children: 19 nodes in 4 rows (5+5+5+4), centered at x:1400
+// Row X values (195px spacing): 1010, 1205, 1400, 1595, 1790
+// Row 4 (4 nodes, centered): 1108, 1303, 1498, 1693
+// Row Y values: 730, 900, 1070, 1240
 const APEX_CHILD_POS: Record<string, { x: number; y: number }> = {
   'apex-task-router':          { x: 1010, y: 730 },
   'apex-agent-spawner':        { x: 1205, y: 730 },
@@ -72,11 +81,16 @@ const APEX_CHILD_POS: Record<string, { x: number; y: number }> = {
   'apex-prisma-client':        { x: 1400, y: 1070 },
   'apex-fastify-gateway':      { x: 1595, y: 1070 },
   'apex-byok-router':          { x: 1790, y: 1070 },
+  'apex-vercel-deployer':      { x: 1108, y: 1240 },
+  'apex-github-actions':       { x: 1303, y: 1240 },
+  'apex-cloudflare-edge':      { x: 1498, y: 1240 },
+  'apex-docker-orchestrator':  { x: 1693, y: 1240 },
 }
 
-// DREAM children: 15 nodes in 3 rows of 5, centered at x:-650
-// Row X values: -1040, -845, -650, -455, -260
-// Row Y values: 730, 900, 1070
+// DREAM children: 19 nodes in 4 rows (5+5+5+4), centered at x:-650
+// Row X values (195px spacing): -1040, -845, -650, -455, -260
+// Row 4 (4 nodes, centered): -943, -748, -553, -358
+// Row Y values: 730, 900, 1070, 1240
 const DREAM_CHILD_POS: Record<string, { x: number; y: number }> = {
   'dream-world-builder':       { x: -1040, y: 730 },
   'dream-scene-composer':      { x: -845,  y: 730 },
@@ -93,11 +107,15 @@ const DREAM_CHILD_POS: Record<string, { x: number; y: number }> = {
   'dream-vllm-server':         { x: -650,  y: 1070 },
   'dream-phaser-engine':       { x: -455,  y: 1070 },
   'dream-threejs-3d':          { x: -260,  y: 1070 },
+  'dream-elevenlabs':          { x: -943,  y: 1240 },
+  'dream-runway-ml':           { x: -748,  y: 1240 },
+  'dream-figma-api':           { x: -553,  y: 1240 },
+  'dream-canva-api':           { x: -358,  y: 1240 },
 }
 
-// VISION children: 15 nodes in 3 rows of 5, centered at x:2050
-// Row X values: 1660, 1855, 2050, 2245, 2440
-// Row Y values: 730, 900, 1070
+// VISION children: 25 nodes in 5 rows (5+5+5+5+5), centered at x:2050
+// Row X values (195px spacing): 1660, 1855, 2050, 2245, 2440
+// Row Y values: 730, 900, 1070, 1240, 1410
 const VISION_CHILD_POS: Record<string, { x: number; y: number }> = {
   'vision-task-executor':      { x: 1660, y: 730 },
   'vision-payment-processor':  { x: 1855, y: 730 },
@@ -114,6 +132,16 @@ const VISION_CHILD_POS: Record<string, { x: number; y: number }> = {
   'vision-billing-meter':      { x: 2050, y: 1070 },
   'vision-sea-scyte-api':      { x: 2245, y: 1070 },
   'vision-resource-monitor':   { x: 2440, y: 1070 },
+  'vision-pitch-deck-forge':   { x: 1660, y: 1240 },
+  'vision-hubspot-crm':        { x: 1855, y: 1240 },
+  'vision-docusign':           { x: 2050, y: 1240 },
+  'vision-resend-email':       { x: 2245, y: 1240 },
+  'vision-mailchimp':          { x: 2440, y: 1240 },
+  'vision-twitter-api':        { x: 1660, y: 1410 },
+  'vision-linkedin-api':       { x: 1855, y: 1410 },
+  'vision-cal-com':            { x: 2050, y: 1410 },
+  'vision-google-ads':         { x: 2245, y: 1410 },
+  'vision-airtable':           { x: 2440, y: 1410 },
 }
 
 const ALL_CHILD_POS = {

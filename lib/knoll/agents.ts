@@ -167,6 +167,24 @@ export const AGENTS: AgentDef[] = [
           { id: 'pg-t1', name: 'Prisma Middleware', type: 'security', description: 'Prisma query middleware chain', status: 'enabled', callCount: 33201 },
         ],
       },
+      {
+        id: 'knoll-cloudflare-waf', parentId: 'knoll', name: 'CloudflareWAF', role: 'WAF & DDoS Shield',
+        description: 'Cloudflare Web Application Firewall and DDoS protection layer. Filters malicious traffic, blocks SQLi/XSS attempts, and absorbs volumetric attacks before they reach origin servers.',
+        status: 'active', memoryType: 'none',
+        capabilities: ['WAF rules','DDoS mitigation','IP reputation','Rate limiting','Bot detection'],
+        tools: [
+          { id: 'cfwaf-t1', name: 'Cloudflare API', type: 'security', description: 'Cloudflare zone and firewall rule management', status: 'enabled', callCount: 18920 },
+        ],
+      },
+      {
+        id: 'knoll-sentry-monitor', parentId: 'knoll', name: 'SentryMonitor', role: 'Error & Security Event Tracker',
+        description: 'Sentry integration for real-time error tracking, performance monitoring, and security event correlation. Surfaces crash reports and anomalous patterns directly into the KNOLL dashboard.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Error capture','Performance monitoring','Security event correlation','Alert routing','Source maps'],
+        tools: [
+          { id: 'sentry-t1', name: '@sentry/nextjs', type: 'api', description: 'Sentry Next.js SDK for error and performance monitoring', status: 'enabled', callCount: 44021 },
+        ],
+      },
     ],
   },
 
@@ -333,6 +351,44 @@ export const AGENTS: AgentDef[] = [
         tools: [
           { id: 'pe-t1', name: 'Image Provider Factory', type: 'api', description: 'Multi-provider image generation router', status: 'enabled', callCount: 2041 },
           { id: 'pe-t2', name: 'Portrait Cache', type: 'memory', description: 'LRU portrait image cache', status: 'enabled', callCount: 8904 },
+        ],
+      },
+      {
+        id: 'hope-seo-engine', parentId: 'hope', name: 'SEOEngine', role: 'SEO Analysis & Optimization',
+        description: 'AI-powered SEO analysis and content optimization. Generates meta tags, structured data, keyword strategies, and technical SEO recommendations for any product or landing page.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Keyword research','Meta generation','Structured data','Technical audit','Content scoring'],
+        tools: [
+          { id: 'seo-t1', name: 'SEO Analyzer', type: 'function', description: 'AI-driven SEO audit and recommendation engine', status: 'enabled', callCount: 3201 },
+        ],
+      },
+      {
+        id: 'hope-brand-builder', parentId: 'hope', name: 'BrandBuilder', role: 'AI Brand Identity Generator',
+        description: 'Generates complete brand identities from a simple idea: name, tagline, color palette, typography, voice guidelines, and logo concepts. Outputs a full brand kit ready for production.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Name generation','Color palette','Typography selection','Voice guidelines','Logo concepts'],
+        tools: [
+          { id: 'brand-t1', name: 'Brand LLM', type: 'llm', description: 'Claude Sonnet 5 for brand identity generation', status: 'enabled', callCount: 1804 },
+          { id: 'brand-t2', name: 'Palette Generator', type: 'function', description: 'Algorithmic color palette builder', status: 'enabled', callCount: 1804 },
+        ],
+      },
+      {
+        id: 'hope-market-research', parentId: 'hope', name: 'MarketResearch', role: 'Market Intelligence & TAM Analysis',
+        description: 'Synthesizes market intelligence from web data: TAM/SAM/SOM analysis, competitive landscape mapping, customer segment profiling, and opportunity sizing for investor pitches.',
+        status: 'active', memoryType: 'long',
+        capabilities: ['TAM/SAM/SOM','Competitive analysis','Customer profiling','Opportunity sizing','Trend analysis'],
+        tools: [
+          { id: 'mkt-t1', name: 'Research LLM', type: 'llm', description: 'Claude for market synthesis and analysis', status: 'enabled', callCount: 2041 },
+        ],
+      },
+      {
+        id: 'hope-landing-page-gen', parentId: 'hope', name: 'LandingPageGen', role: 'Conversion Landing Page Builder',
+        description: 'Generates high-converting landing pages from a product brief: copy, layout, CTA hierarchy, testimonial structure, and A/B variant generation. Deploys directly via APEX.',
+        status: 'active', memoryType: 'none',
+        capabilities: ['Copy generation','Layout design','CTA optimization','A/B variants','SEO metadata'],
+        tools: [
+          { id: 'lpg-t1', name: 'Page Builder LLM', type: 'llm', description: 'Claude for landing page copy and structure', status: 'enabled', callCount: 1204 },
+          { id: 'lpg-t2', name: 'v0 API', type: 'api', description: 'v0.dev for React component generation', status: 'enabled', callCount: 803 },
         ],
       },
     ],
@@ -505,6 +561,43 @@ export const AGENTS: AgentDef[] = [
           { id: 'bk-t1', name: 'BYOK Proxy', type: 'api', description: 'Transparent key injection proxy', status: 'enabled', callCount: 890 },
         ],
       },
+      {
+        id: 'apex-vercel-deployer', parentId: 'apex', name: 'VercelDeployer', role: 'Production Deployment Controller',
+        description: 'Manages production deployments via Vercel API. Handles project creation, environment variable injection, deployment triggering, preview URL management, and promotion to production.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Deploy trigger','Env var injection','Preview URLs','Production promotion','Rollback'],
+        tools: [
+          { id: 'vd-t1', name: 'Vercel API', type: 'api', description: 'Vercel REST API for deployment management', status: 'enabled', callCount: 412 },
+        ],
+      },
+      {
+        id: 'apex-github-actions', parentId: 'apex', name: 'GitHubActions', role: 'CI/CD Pipeline Manager',
+        description: 'Manages GitHub Actions workflows: triggers CI runs, monitors check statuses, handles failed workflow triage, and coordinates automated testing across all repositories.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Workflow triggers','Check monitoring','Failure triage','PR automation','Secret management'],
+        tools: [
+          { id: 'gha-t1', name: 'GitHub API', type: 'api', description: 'GitHub REST & GraphQL API for Actions management', status: 'enabled', callCount: 2901 },
+        ],
+      },
+      {
+        id: 'apex-cloudflare-edge', parentId: 'apex', name: 'CloudflareEdge', role: 'Edge Runtime & CDN Manager',
+        description: 'Cloudflare Workers and CDN management layer. Deploys edge functions, manages cache rules, configures DNS records, and routes traffic for all HDV and client projects.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Edge functions','Cache management','DNS control','Traffic routing','SSL certificates'],
+        tools: [
+          { id: 'cfe-t1', name: 'Cloudflare Workers API', type: 'api', description: 'Cloudflare Workers deployment and management', status: 'enabled', callCount: 1201 },
+        ],
+      },
+      {
+        id: 'apex-docker-orchestrator', parentId: 'apex', name: 'DockerOrchestrator', role: 'Container Build & Registry',
+        description: 'Builds, tags, and pushes Docker images for all services. Manages container registries, multi-stage build pipelines, and coordinates with gVisor sandbox for secure execution environments.',
+        status: 'active', memoryType: 'short',
+        capabilities: ['Image building','Registry management','Multi-stage builds','Tag management','Compose orchestration'],
+        tools: [
+          { id: 'dock-t1', name: 'Docker API', type: 'api', description: 'Docker Engine API for container operations', status: 'enabled', callCount: 891 },
+          { id: 'dock-t2', name: 'Container Registry', type: 'api', description: 'Docker Hub / GHCR image registry', status: 'enabled', callCount: 634 },
+        ],
+      },
     ],
   },
 
@@ -668,6 +761,43 @@ export const AGENTS: AgentDef[] = [
         capabilities: ['3D rendering','Camera control','Lighting','Entity positioning','WebGL shaders'],
         tools: [
           { id: 'tj-t1', name: 'three v0.184', type: 'api', description: 'Three.js 3D rendering library', status: 'enabled', callCount: 401 },
+        ],
+      },
+      {
+        id: 'dream-elevenlabs', parentId: 'dream', name: 'ElevenLabs', role: 'Neural Voice Synthesis',
+        description: 'ElevenLabs API for production-quality neural voice synthesis. Generates character voices, narration, and marketing audio with cloned or library voices at commercial quality.',
+        status: 'idle', memoryType: 'none',
+        capabilities: ['Voice cloning','Text-to-speech','Emotion inflection','Multi-language','Audio streaming'],
+        tools: [
+          { id: 'el-t1', name: 'ElevenLabs API', type: 'api', description: 'ElevenLabs speech synthesis API', status: 'enabled', callCount: 2041 },
+        ],
+      },
+      {
+        id: 'dream-runway-ml', parentId: 'dream', name: 'RunwayML', role: 'AI Video Generation',
+        description: 'Runway ML Gen-3 integration for AI-powered video generation: text-to-video, image-to-video, video editing, and cinematic scene generation for marketing and storytelling.',
+        status: 'idle', memoryType: 'none',
+        capabilities: ['Text-to-video','Image-to-video','Video editing','Motion control','Style transfer'],
+        tools: [
+          { id: 'rw-t1', name: 'Runway API', type: 'api', description: 'Runway ML Gen-3 API for video generation', status: 'enabled', callCount: 304 },
+        ],
+      },
+      {
+        id: 'dream-figma-api', parentId: 'dream', name: 'FigmaAPI', role: 'UI Design & Prototype Generator',
+        description: 'Figma API integration for programmatic design generation. Creates wireframes, UI components, and interactive prototypes from natural language. Exports production-ready design assets.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Wireframe generation','Component creation','Prototype linking','Asset export','Design tokens'],
+        tools: [
+          { id: 'fig-t1', name: 'Figma REST API', type: 'api', description: 'Figma API for file and component management', status: 'enabled', callCount: 891 },
+          { id: 'fig-t2', name: 'Figma MCP', type: 'api', description: 'Figma MCP server for AI design generation', status: 'enabled', callCount: 512 },
+        ],
+      },
+      {
+        id: 'dream-canva-api', parentId: 'dream', name: 'CanvaAPI', role: 'Marketing Graphics Studio',
+        description: 'Canva API integration for automated marketing graphics production. Generates social posts, ad creatives, pitch deck visuals, and branded templates at scale from content briefs.',
+        status: 'idle', memoryType: 'none',
+        capabilities: ['Template generation','Brand consistency','Social graphics','Ad creatives','Bulk export'],
+        tools: [
+          { id: 'can-t1', name: 'Canva Connect API', type: 'api', description: 'Canva API for design automation', status: 'enabled', callCount: 1402 },
         ],
       },
     ],
@@ -836,6 +966,97 @@ export const AGENTS: AgentDef[] = [
         capabilities: ['CPU tracking','Memory limits','I/O monitoring','Quota enforcement','Limit alerts'],
         tools: [
           { id: 'rm-t1', name: 'Resource Monitor', type: 'function', description: 'Process resource usage tracker', status: 'enabled', callCount: 4820 },
+        ],
+      },
+      {
+        id: 'vision-pitch-deck-forge', parentId: 'vision', name: 'PitchDeckForge', role: 'Investor Pitch Deck Generator',
+        description: 'Generates complete investor pitch decks from a product brief: problem/solution framing, market size, traction slides, financial projections, and team slides. Exports to PDF and PPTX.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Deck generation','Financial modeling','Market sizing','Slide design','PDF/PPTX export'],
+        tools: [
+          { id: 'pdf-t1', name: 'Pitch LLM', type: 'llm', description: 'Claude Opus for pitch narrative generation', status: 'enabled', callCount: 412 },
+          { id: 'pdf-t2', name: 'Canva API', type: 'api', description: 'Deck design via Canva Connect API', status: 'enabled', callCount: 201 },
+        ],
+      },
+      {
+        id: 'vision-hubspot-crm', parentId: 'vision', name: 'HubSpotCRM', role: 'Investor & Lead CRM',
+        description: 'HubSpot CRM integration for investor relationship management, lead tracking, and deal pipeline automation. Creates contacts, deals, and sequences for investor outreach campaigns.',
+        status: 'idle', memoryType: 'long',
+        capabilities: ['Contact management','Deal pipeline','Investor sequences','Lead scoring','Activity logging'],
+        tools: [
+          { id: 'hs-t1', name: 'HubSpot API', type: 'api', description: 'HubSpot CRM REST API', status: 'enabled', callCount: 1804 },
+        ],
+      },
+      {
+        id: 'vision-docusign', parentId: 'vision', name: 'DocuSign', role: 'Contracts & Term Sheets',
+        description: 'DocuSign eSignature integration for automated contract delivery and collection. Sends NDAs, term sheets, service agreements, and investment documents through legally binding e-signature flows.',
+        status: 'idle', memoryType: 'long',
+        capabilities: ['eSignature','Template management','Envelope tracking','Bulk send','Audit certificate'],
+        tools: [
+          { id: 'ds-t1', name: 'DocuSign eSign API', type: 'api', description: 'DocuSign REST API for envelope management', status: 'enabled', callCount: 89 },
+        ],
+      },
+      {
+        id: 'vision-resend-email', parentId: 'vision', name: 'ResendEmail', role: 'Transactional Email Sender',
+        description: 'Resend transactional email API for all system-triggered emails: onboarding flows, investment update digests, contract delivery, password resets, and webhook failure alerts.',
+        status: 'idle', memoryType: 'none',
+        capabilities: ['Transactional email','React email templates','Domain verification','Bounce handling','Analytics'],
+        tools: [
+          { id: 'resend-t1', name: 'Resend API', type: 'api', description: 'Resend email delivery API with React Email', status: 'enabled', callCount: 4201 },
+        ],
+      },
+      {
+        id: 'vision-mailchimp', parentId: 'vision', name: 'Mailchimp', role: 'Email Marketing Campaigns',
+        description: 'Mailchimp integration for full email marketing automation: audience segmentation, campaign creation, automated sequences, A/B testing, and performance analytics for product launches.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Audience management','Campaign creation','Automation flows','A/B testing','Performance analytics'],
+        tools: [
+          { id: 'mc2-t1', name: 'Mailchimp Marketing API', type: 'api', description: 'Mailchimp v3 Marketing API', status: 'enabled', callCount: 891 },
+        ],
+      },
+      {
+        id: 'vision-twitter-api', parentId: 'vision', name: 'TwitterAPI', role: 'Twitter/X Publisher',
+        description: 'Twitter/X API v2 integration for automated social publishing, thread creation, engagement monitoring, and influencer outreach. Powers launch announcements and investor update distribution.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Tweet publishing','Thread creation','Engagement monitoring','DM automation','Analytics'],
+        tools: [
+          { id: 'tw-t1', name: 'Twitter API v2', type: 'api', description: 'Twitter/X REST API v2 for publishing and analytics', status: 'enabled', callCount: 2041 },
+        ],
+      },
+      {
+        id: 'vision-linkedin-api', parentId: 'vision', name: 'LinkedInAPI', role: 'LinkedIn Outreach & Publishing',
+        description: 'LinkedIn API integration for professional network outreach, company page publishing, lead generation, and investor connection automation. Critical for B2B and fundraising campaigns.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Post publishing','Outreach automation','Lead generation','Company page','Analytics'],
+        tools: [
+          { id: 'li-t1', name: 'LinkedIn API', type: 'api', description: 'LinkedIn REST API for publishing and messaging', status: 'enabled', callCount: 1201 },
+        ],
+      },
+      {
+        id: 'vision-cal-com', parentId: 'vision', name: 'CalCom', role: 'Investor Meeting Scheduler',
+        description: 'Cal.com integration for investor and stakeholder meeting scheduling. Creates booking pages, manages availability, sends automated reminders, and logs meetings to HubSpot CRM.',
+        status: 'idle', memoryType: 'none',
+        capabilities: ['Booking pages','Availability management','Automated reminders','CRM sync','Meeting analytics'],
+        tools: [
+          { id: 'cal-t1', name: 'Cal.com API', type: 'api', description: 'Cal.com booking and scheduling API', status: 'enabled', callCount: 604 },
+        ],
+      },
+      {
+        id: 'vision-google-ads', parentId: 'vision', name: 'GoogleAds', role: 'Paid Acquisition Manager',
+        description: 'Google Ads API integration for automated campaign creation, bid management, audience targeting, and conversion tracking. Generates and A/B tests ad copy from product briefs.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Campaign creation','Bid management','Audience targeting','Ad copy generation','Conversion tracking'],
+        tools: [
+          { id: 'gads-t1', name: 'Google Ads API', type: 'api', description: 'Google Ads API v17 for campaign management', status: 'enabled', callCount: 812 },
+        ],
+      },
+      {
+        id: 'vision-airtable', parentId: 'vision', name: 'Airtable', role: 'Project & Milestone Tracker',
+        description: 'Airtable integration for project management, milestone tracking, investor updates, and deliverable coordination. Creates bases, updates records, and generates progress reports automatically.',
+        status: 'idle', memoryType: 'short',
+        capabilities: ['Base management','Record operations','View generation','Automation triggers','Progress reporting'],
+        tools: [
+          { id: 'at2-t1', name: 'Airtable API', type: 'api', description: 'Airtable REST API for base and record management', status: 'enabled', callCount: 3401 },
         ],
       },
     ],
