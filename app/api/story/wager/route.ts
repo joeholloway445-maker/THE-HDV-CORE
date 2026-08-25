@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { normalizeWagerCurrency, isValidWager } from '@/lib/story-logic'
 
 export async function POST(req: Request) {
   const supabase = await createClient()
@@ -7,11 +8,11 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { arcId, choiceId, amount, currency } = await req.json()
-  if (typeof arcId !== 'string' || typeof choiceId !== 'string' || !Number.isInteger(amount) || amount <= 0) {
+  if (!isValidWager(arcId, choiceId, amount)) {
     return NextResponse.json({ error: 'Invalid wager' }, { status: 400 })
   }
 
-  const requested = currency === 'renown' ? 'renown' : 'chip'
+  const requested = normalizeWagerCurrency(currency)
 
   const { data, error } = await supabase.rpc('place_story_wager', {
     p_arc_id: arcId,

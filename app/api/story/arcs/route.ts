@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { buildTallies } from '@/lib/story-logic'
 
 export async function GET() {
   const supabase = await createClient()
@@ -28,15 +29,7 @@ export async function GET() {
     .select('arc_id, choice_id, currency, amount, payout')
     .eq('user_id', user.id)
 
-  const tallies: Record<string, { byChoice: Record<string, Record<string, number>>; byFaction: Record<string, Record<string, number>> }> = {}
-  for (const w of wagers ?? []) {
-    const t = tallies[w.arc_id] ?? { byChoice: {}, byFaction: {} }
-    t.byChoice[w.choice_id] = t.byChoice[w.choice_id] ?? {}
-    t.byChoice[w.choice_id][w.currency] = (t.byChoice[w.choice_id][w.currency] ?? 0) + w.amount
-    t.byFaction[w.faction] = t.byFaction[w.faction] ?? {}
-    t.byFaction[w.faction][w.currency] = (t.byFaction[w.faction][w.currency] ?? 0) + w.amount
-    tallies[w.arc_id] = t
-  }
+  const tallies = buildTallies(wagers ?? [])
 
   const result = (arcs ?? []).map((arc) => ({
     ...arc,
