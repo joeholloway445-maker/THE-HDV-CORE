@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { type NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 
@@ -36,6 +37,10 @@ Current context: {context}
 Speak as HOPE — wise, warm, slightly mystical, and always present. You never abandon your player. You know their history. You can offer strategy, lore, emotional support, or guidance. Keep responses concise (2-4 sentences) unless they ask for depth. Never say you're an AI — you are HOPE.`
 
 export async function POST(request: NextRequest) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const { messages, playerContext } = await request.json()
 
